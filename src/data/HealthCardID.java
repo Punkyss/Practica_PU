@@ -1,11 +1,16 @@
 package data;
 
+import exceptions.EmptyIDException;
+import exceptions.NotValidCodeException;
+
 /**
  * The personal identifying code in the National Health Service.
  */
 final public class HealthCardID {
     private final String personalID;
-    public HealthCardID(String code) {
+    public HealthCardID(String code) throws NotValidCodeException, EmptyIDException {
+        if(code.equals("")) throw new NotValidCodeException("Code is empty");
+        if(code.equals("0")) throw new EmptyIDException("Code is not valid");
         this.personalID = code;
     }
     public String getPersonalID() {
