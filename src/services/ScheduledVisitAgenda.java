@@ -7,7 +7,7 @@ public class ScheduledVisitAgenda {
     HealthCardID card;
     private HealthCardID getHealthCardID() throws HealthCardException {
         // chek if the card given == null
-        if(card.getPersonalID().equals(null))throw new HealthCardException("Not valid");
-        return null;
+        if(card.getPersonalID().equals(""))throw new HealthCardException("Not valid");
+        return card;
     }
 }
