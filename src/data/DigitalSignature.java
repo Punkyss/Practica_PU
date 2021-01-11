@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class DigitalSignature {
     private final String signatureCode;
-
+    // 2 brand new exceptions (NotValidCodeException for empty codes) (EmptyIDException for not valid ones)
     public DigitalSignature(String signatureCode) throws NotValidCodeException, EmptyIDException {
         if(signatureCode.equals("")) throw new NotValidCodeException("Signature is empty");
         if(signatureCode.equals("0")) throw new EmptyIDException("Signature is not valid");

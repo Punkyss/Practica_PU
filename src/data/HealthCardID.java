@@ -8,6 +8,7 @@ import exceptions.NotValidCodeException;
  */
 final public class HealthCardID {
     private final String personalID;
+    // 2 brand new exceptions (NotValidCodeException for empty codes) (EmptyIDException for not valid ones)
     public HealthCardID(String code) throws NotValidCodeException, EmptyIDException {
         if(code.equals("")) throw new NotValidCodeException("Code is empty");
         if(code.equals("0")) throw new EmptyIDException("Code is not valid");
