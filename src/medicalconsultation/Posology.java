@@ -16,7 +16,6 @@ public class Posology { // A class that represents the posology of a medicine
     }
 
     // the getters and setters
-
     public float getDose() {
         return dose;
     }
