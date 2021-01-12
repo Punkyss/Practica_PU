@@ -1,4 +1,4 @@
-package medicalconsultation;
+package medicalconsultation.enumeration;
 
 public enum dayMoment {
     BEFOREBREAKFAST, DURINGBREAKFAST, AFTERBREAKFAST, BEFORELUNCH,

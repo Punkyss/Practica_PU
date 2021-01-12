@@ -18,7 +18,9 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     private Date endDate;
     private HealthCardID hcID; // the healthcard ID of the patient
     private DigitalSignature eSign; // the eSignature of the doctor
+
     //??? // Its components, that is, the set of medical prescription lines
+
     public MedicalPrescription () {
         //. . .
     } // Makes some inicialization
@@ -35,5 +37,6 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         if(false)throw new ProductNotInPrescription("Not valid");
         //. . .
     }
+
     //??? // the getters and setters
 }
