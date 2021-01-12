@@ -21,7 +21,6 @@ public class CommonDataTest  {
         digitalSignature= new DigitalSignature(null);
         healthCardID= new HealthCardID(null);
         productID= new ProductID(null);
-
     }
 
     @Test
