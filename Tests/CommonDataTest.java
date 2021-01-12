@@ -1,12 +1,12 @@
-import Interfaces.DataInterfaceTest;
 import data.DigitalSignature;
 import data.HealthCardID;
 import data.ProductID;
 import exceptions.EmptyIDException;
 import exceptions.NotValidCodeException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class CommonDataTest implements DataInterfaceTest {
+public class CommonDataTest  {
     DigitalSignature digitalSignature;
     HealthCardID healthCardID;
     ProductID productID;
@@ -16,15 +16,22 @@ public class CommonDataTest implements DataInterfaceTest {
 
     }
 
-    @Override
-    public void addIdTest() throws NotValidCodeException, EmptyIDException {
+    @Test
+    public void addIdTestEmpty() throws NotValidCodeException,EmptyIDException {
+        digitalSignature= new DigitalSignature(null);
+        healthCardID= new HealthCardID(null);
+        productID= new ProductID(null);
 
     }
 
-    @Override
-    public void getIdTest() {
+    @Test
+    public void addIdTestNotValid() throws NotValidCodeException,EmptyIDException {
+        digitalSignature= new DigitalSignature("0");
+        healthCardID= new HealthCardID("0");
+        productID= new ProductID("0");
 
     }
+
 
 
 }
