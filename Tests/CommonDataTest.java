@@ -18,16 +18,19 @@ public class CommonDataTest  {
 
     @Test
     public void addIdTestEmpty() throws NotValidCodeException,EmptyIDException {
-        digitalSignature= new DigitalSignature(null);
-        healthCardID= new HealthCardID(null);
-        productID= new ProductID(null);
+        digitalSignature= new DigitalSignature("807024000012");
+        System.out.println("OK");
+        healthCardID= new HealthCardID("BBBBBBBBQR648597807024000012");
+        System.out.println("OK");
+        productID= new ProductID("807024000012");
+        System.out.println("OK");
     }
 
     @Test
     public void addIdTestNotValid() throws NotValidCodeException,EmptyIDException {
-        digitalSignature= new DigitalSignature("0");
-        healthCardID= new HealthCardID("0");
-        productID= new ProductID("0");
+        digitalSignature= new DigitalSignature("");
+        healthCardID= new HealthCardID("");
+        productID= new ProductID("");
 
     }
 

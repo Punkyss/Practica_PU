@@ -7,27 +7,27 @@ import exceptions.NotValidCodeException;
  * The personal identifying code in the National Health Service.
  */
 final public class HealthCardID {
-    private final String personalID;
+    private final String CIP;
     // 2 brand new exceptions (NotValidCodeException for empty codes) (EmptyIDException for not valid ones)
     public HealthCardID(String code) throws NotValidCodeException, EmptyIDException {
-        if(code.equals("")) throw new NotValidCodeException("Code is empty");
-        if(code.equals("0")) throw new EmptyIDException("Code is not valid");
-        this.personalID = code;
+        if(!code.matches("\\p{Upper}{8}\\p{Upper}{2}\\d{6}\\d{12}")) throw new NotValidCodeException("Code is empty");
+        if(code.equals("")) throw new EmptyIDException("Code is not valid");
+        this.CIP = code;
     }
-    public String getPersonalID() {
-        return personalID;
+    public String getCIP() {
+        return CIP;
     }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HealthCardID hcardID = (HealthCardID) o;
-        return personalID.equals(hcardID.personalID);
+        return CIP.equals(hcardID.CIP);
     }
     @Override
-    public int hashCode() { return personalID.hashCode(); }
+    public int hashCode() { return CIP.hashCode(); }
     @Override
     public String toString() {
-        return "HealthCardID{" + "personal code='" + personalID + '\'' + '}';
+        return "HealthCardID{" + "personal code='" + CIP + '\'' + '}';
     }
 }

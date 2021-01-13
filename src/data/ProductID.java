@@ -9,8 +9,8 @@ public class ProductID {
     private final String code;
     // 2 brand new exceptions (NotValidCodeException for empty codes) (EmptyIDException for not valid ones)
     public ProductID(String code) throws NotValidCodeException, EmptyIDException {
-        if(code.equals("")) throw new NotValidCodeException("Code is empty");
-        if(code.equals("0")) throw new EmptyIDException("Code is not valid");
+        if(!code.matches("\\d{12}")) throw new NotValidCodeException("Code is empty");
+        if(code.equals("")) throw new EmptyIDException("Code is not valid");
         this.code = code;
     }
 
