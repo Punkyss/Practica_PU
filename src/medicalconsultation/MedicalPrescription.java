@@ -20,17 +20,10 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     private DigitalSignature eSign; // the eSignature of the doctor
 
     //??? // Its components, that is, the set of medical prescription lines
-    private String[] instruc;
 
-
-
-    //Constructor
     public MedicalPrescription () {
         //. . .
-    }
-
-
-    // Makes some inicialization
+    } // Makes some inicialization
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
         if(this==null)throw new IncorrectTakingGuidelinesException("Not valid");
         /*. . .*/
@@ -45,7 +38,6 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         //. . .
     }
 
-    // the getters and setters
     public int getPrescCode() {
         return prescCode;
     }
@@ -58,10 +50,6 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public HealthCardID getHcID() {
         return hcID;
     }
@@ -70,12 +58,23 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         return eSign;
     }
 
+    public void setPrescCode(int prescCode) {
+        this.prescCode = prescCode;
+    }
+
+    public void setPrescDate(Date prescDate) {
+        this.prescDate = prescDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setHcID(HealthCardID hcID) {
+        this.hcID = hcID;
+    }
+
     public void seteSign(DigitalSignature eSign) {
         this.eSign = eSign;
     }
-
-    public String[] getInstruc() {
-        return instruc;
-    }
-
 }

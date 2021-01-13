@@ -7,6 +7,7 @@ public class ProductSpecification {
     private ProductID UPCcode;
     private String description;
     private BigDecimal price;
+
     public ProductSpecification(ProductID UPCcode, String description, BigDecimal price){
         this.UPCcode=UPCcode;
         this.description=description;
