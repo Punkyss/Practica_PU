@@ -1,5 +1,6 @@
 package medicalconsultation;
 
+import data.DigitalSignature;
 import data.HealthCardID;
 import data.ProductID;
 import exceptions.*;
@@ -43,11 +44,11 @@ public class ConsultationTerminal {
         //. . .
     }
 
-    public void initPrescriptionEdition(Date now) throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
+    public void initPrescriptionEdition() throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
 
         if(MP.equals(null))throw new AnyCurrentPrescriptionException("No prescription in running");
 
-        if(now.before(MP.getEndDate())){
+        if(new Date().before(MP.getEndDate())){
             throw new NotFinishedTreatmentException("Current treatment not finalised yet.");
         }else{
             System.out.println("Start of Edition");
@@ -70,7 +71,7 @@ public class ConsultationTerminal {
     public void selectProduct(int option) throws AnyMedicineSearchException, ConnectException{
 
         if(productSpec_List.isEmpty())throw new AnyMedicineSearchException("Not valid");
-        ps = productSpec_List.get(option);
+        ps = HNS.getProductSpecific(option);
 
         // si falla la conexió ja ho fara una classe delegada
         //if(false)throw new ConnectException("Not valid");
@@ -79,23 +80,35 @@ public class ConsultationTerminal {
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
 
-        TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[2]),instruc[3], Float.valueOf(instruc[4]), Float.valueOf(instruc[5]), FqUnit.valueOf(instruc[6]));
-        Posology p = tgl.getPosology();
+        if (ps.equals(null))throw new AnySelectedMedicineException("Not valid");
+
+        //cuando el formato de la pauta o la posología son incorrectos, o bien la información es incompleta
+        if(instruc.length!=7){
+            throw new IncorrectTakingGuidelinesException("Not valid");
+        }else {
+            TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[2]), instruc[3], Float.valueOf(instruc[4]), Float.valueOf(instruc[5]), FqUnit.valueOf(instruc[6]));
+            Posology p = tgl.getPosology();
+        }
+        MP.addLine(ps.getUPCcode(),instruc);
 
 
-        if(false)throw new AnySelectedMedicineException("Not valid");
-        if(false)throw new IncorrectTakingGuidelinesException("Not valid");
         //. . .
     }
     public void enterTreatmentEndingDate(Date date) throws IncorrectEndingDateException{
-       if(false)throw new IncorrectEndingDateException("Not valid");
+        if(date.before(new Date()))throw new IncorrectEndingDateException("Not valid end date");
+        MP.setPrescDate(new Date());
+        MP.setEndDate(date);
         //. . .
     }
     public void sendePrescription() throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
-       if(false)throw new ConnectException("Not valid");
-       if(false)throw new NotValidePrescription("Not valid");
-       if(false)throw new eSignatureException("Not valid");
-       if(false)throw new NotCompletedMedicalPrescription("Not valid");
+
+        //MP.seteSign(new DigitalSignature(new Byte[] {Byte.valueOf("yokese d'on treure aixo")}));
+        MP=HNS.sendePrescription(MP);
+
+        //if(false)throw new ConnectException("Not valid");
+        if(false)throw new NotValidePrescription("Not valid");
+        if(false)throw new eSignatureException("Not valid");
+        if(false)throw new NotCompletedMedicalPrescription("Not valid");
         //. . .
     }
 
