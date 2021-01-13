@@ -10,21 +10,21 @@ import exceptions.NotValidCodeException;
 public class ProductSpecificationTest {
     ProductSpecification productEsp;
     ProductID product;
-    String descr;
+    String description;
     BigDecimal price;
 
     @BeforeEach
     void setUp() throws NotValidCodeException, EmptyIDException{
-        product = new ProductID("5");
-        descr = new String("a");
+        product = new ProductID("789457624568");
+        description = new String("a");
         price=new BigDecimal(1);
     }
 
     @Test
     void ProductConstructorTest() {
-        productEsp = new ProductSpecification(product,descr,price);
+        productEsp = new ProductSpecification(product,description,price);
         assertEquals(product,productEsp.getUPCcode());
-        assertEquals(descr,productEsp.getDescription());
+        assertEquals(description,productEsp.getDescription());
         assertEquals(price,productEsp.getPrice());
 
     }
