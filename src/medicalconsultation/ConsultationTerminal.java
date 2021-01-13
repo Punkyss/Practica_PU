@@ -21,6 +21,7 @@ public class ConsultationTerminal {
     private List<ProductSpecification> productSpec_List;
     private ProductSpecification ps;
 
+
     public void setHNS(HealthNationalService s){
         this.HNS=s;
     }
@@ -102,6 +103,7 @@ public class ConsultationTerminal {
     }
     public void sendePrescription() throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
 
+        //if(MP.)
         //MP.seteSign(new DigitalSignature(new Byte[] {Byte.valueOf("yokese d'on treure aixo")}));
         MP=HNS.sendePrescription(MP);
 
@@ -123,4 +125,12 @@ public class ConsultationTerminal {
     }*/
 
  //??? // Other methods, apart from the input events
+
+    public List<ProductSpecification> getProductSpec_List() {
+        return productSpec_List;
+    }
+
+    public void setProductSpec_List(List<ProductSpecification> productSpec_List) {
+        this.productSpec_List = productSpec_List;
+    }
 }
