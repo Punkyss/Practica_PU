@@ -6,16 +6,17 @@ import exceptions.NotValidCodeException;
 import java.util.Objects;
 
 public class DigitalSignature {
-    private final String signatureCode;
+    private final byte[] signatureCode;
     // 2 brand new exceptions (NotValidCodeException for empty codes) (EmptyIDException for not valid ones)
-    public DigitalSignature(String signatureCode) throws NotValidCodeException, EmptyIDException {
-
-        if(!signatureCode.matches("\\d{12}")) throw new NotValidCodeException("Code is empty");
+    public DigitalSignature(byte[] signatureCode) throws NotValidCodeException, EmptyIDException {
+        for (byte b:signatureCode) {
+            if(Byte.valueOf(b)!=null)throw new NotValidCodeException("A character is not a byte");
+        }
         if(signatureCode.equals("")) throw new EmptyIDException("Code is not valid");
         this.signatureCode = signatureCode;
     }
 
-    public String getSignatureCode() {
+    public byte[] getSignatureCode() {
         return signatureCode;
     }
 

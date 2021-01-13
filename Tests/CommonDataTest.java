@@ -18,7 +18,7 @@ public class CommonDataTest  {
 
     @Test
     public void addIdTestEmpty() throws NotValidCodeException,EmptyIDException {
-        digitalSignature= new DigitalSignature("807024000012");
+        digitalSignature= new DigitalSignature(new byte[]{(byte) 0xe0,0x4f});
         System.out.println("OK");
         healthCardID= new HealthCardID("BBBBBBBBQR648597807024000012");
         System.out.println("OK");
@@ -28,7 +28,7 @@ public class CommonDataTest  {
 
     @Test
     public void addIdTestNotValid() throws NotValidCodeException,EmptyIDException {
-        digitalSignature= new DigitalSignature("");
+        digitalSignature= new DigitalSignature(new byte[]{});
         healthCardID= new HealthCardID("");
         productID= new ProductID("");
 
