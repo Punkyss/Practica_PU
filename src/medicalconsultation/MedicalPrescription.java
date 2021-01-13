@@ -38,5 +38,43 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         //. . .
     }
 
-    //??? // the getters and setters
+    public int getPrescCode() {
+        return prescCode;
+    }
+
+    public Date getPrescDate() {
+        return prescDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public HealthCardID getHcID() {
+        return hcID;
+    }
+
+    public DigitalSignature geteSign() {
+        return eSign;
+    }
+
+    public void setPrescCode(int prescCode) {
+        this.prescCode = prescCode;
+    }
+
+    public void setPrescDate(Date prescDate) {
+        this.prescDate = prescDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setHcID(HealthCardID hcID) {
+        this.hcID = hcID;
+    }
+
+    public void seteSign(DigitalSignature eSign) {
+        this.eSign = eSign;
+    }
 }
