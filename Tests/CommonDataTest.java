@@ -37,10 +37,9 @@ public class CommonDataTest  {
     @Test
     public void addIdTestValid() {
         byte[] tempByte = new byte[]{(byte) 0xe0,(byte)  0x4f};
-        int count=0;
-        while (count != 2) {
-            Assertions.assertEquals(digitalSignature.getSignatureCode()[count], tempByte[count]);
-            count++;
+
+        for (int i=0;i != 2;i++) {
+            Assertions.assertEquals(digitalSignature.getSignatureCode()[i], tempByte[i]);
         }
         Assertions.assertEquals(healthCardID.getCIP(), "BBBBBBBBQR648597807024000012");
         Assertions.assertEquals(productID.getCode(), "807024000012");
