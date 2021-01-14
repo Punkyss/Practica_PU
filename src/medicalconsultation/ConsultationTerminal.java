@@ -109,7 +109,6 @@ public class ConsultationTerminal {
     //No hace falta contemplar la parte correspondiente a los servicios de impresión, a
     //fin de imprimir la hoja de tratamiento. Es por ello que no se pide la
     //implementación del método relacionado, ni de las excepciones relacionadas.
-    //
     public void printePresc() throws printingException{
         // Not suposed to make
     }
