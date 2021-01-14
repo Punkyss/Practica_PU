@@ -24,7 +24,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     //??? // Its components, that is, the set of medical prescription lines
 
     public MedicalPrescription (int prescCode, Date prescDate, Date endDate, HealthCardID hcID, DigitalSignature eSign) {
-        prescriptionLines = new ArrayList<>();
+        prescriptionLines = new ArrayList<MedicalPrescriptionLine>();
         this.endDate=endDate;
         this.prescCode=prescCode;
         this.prescDate=prescDate;
@@ -33,7 +33,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     } // Makes some inicialization
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
-//        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(instruc[0],instruc[1],instruc[2],instruc[3],instruc[4],instruc[5])));
+        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[2]), instruc[3], Float.valueOf(instruc[4]), Float.valueOf(instruc[5]), FqUnit.valueOf(instruc[6]))));
     }
     public void modifyLine(ProductID prodID, String[] instruc) throws ProductNotInPrescription, IncorrectTakingGuidelinesException {
         if(false)throw new ProductNotInPrescription("Not valid");
