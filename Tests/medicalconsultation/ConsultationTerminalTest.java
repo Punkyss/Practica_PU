@@ -1,3 +1,5 @@
+package medicalconsultation;
+
 import data.HealthCardID;
 import exceptions.*;
 import medicalconsultation.*;
