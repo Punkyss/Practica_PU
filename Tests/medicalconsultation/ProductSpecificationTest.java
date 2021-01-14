@@ -1,3 +1,5 @@
+package medicalconsultation;
+
 import data.ProductID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
