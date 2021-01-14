@@ -17,7 +17,7 @@ public class Posology { // A class that represents the posology of a medicine
 
     // the getters and setters
     public float getDose() {
-        return dose;
+        return this.dose;
     }
 
     public void setDose(float dose) {
@@ -25,7 +25,7 @@ public class Posology { // A class that represents the posology of a medicine
     }
 
     public float getFreq() {
-        return freq;
+        return this.freq;
     }
 
     public void setFreq(float freq) {
@@ -33,7 +33,7 @@ public class Posology { // A class that represents the posology of a medicine
     }
 
     public FqUnit getFreqUnit() {
-        return freqUnit;
+        return this.freqUnit;
     }
 
     public void setFreqUnit(FqUnit freqUnit) {
