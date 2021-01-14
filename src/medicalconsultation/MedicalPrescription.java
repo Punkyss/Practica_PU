@@ -32,7 +32,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         this.hcID=hcID;
     } // Makes some inicialization
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
-        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
+        if(instruc.length!=7)throw new IncorrectTakingGuidelinesException("Not valid");
         prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[2]), instruc[3], Float.valueOf(instruc[4]), Float.valueOf(instruc[5]), FqUnit.valueOf(instruc[6]))));
     }
     public void modifyLine(ProductID prodID, String[] instruc) throws ProductNotInPrescription, IncorrectTakingGuidelinesException {
