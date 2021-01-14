@@ -1,6 +1,5 @@
 package medicalconsultation;
-import medicalconsultation.enumeration.FqUnit;
-import medicalconsultation.enumeration.dayMoment;
+
 import data.ProductID;
 /*private dayMoment dMoment;
 private float duration;
