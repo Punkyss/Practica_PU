@@ -21,7 +21,7 @@ public class ConsultationTerminal {
     private List<ProductSpecification> productSpec_List;
     private ProductSpecification ps;
     private DigitalSignature eSignature;
-    ScheduledVisitAgenda visitAgenda;
+    private ScheduledVisitAgenda visitAgenda;
 
     public ConsultationTerminal(DigitalSignature es,HealthNationalService s,ScheduledVisitAgenda va) {
         this.eSignature = es;
