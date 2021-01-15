@@ -59,6 +59,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         for(int i = 0;i<=prescriptionLines.size();i+=1){
             if(prodID.equals(prescriptionLines.get(i).getProduct())) {
                 prescriptionLines.remove(i);
+                productsPrescripted.remove(i);
                 break;
             }
         }
