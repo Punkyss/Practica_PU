@@ -21,7 +21,7 @@ public class ConsultationTerminal {
     private List<ProductSpecification> productSpec_List;
     private ProductSpecification ps;
     private DigitalSignature eSignature;
-    ScheduledVisitAgenda visitAgenda;
+    private ScheduledVisitAgenda visitAgenda;
 
     public ConsultationTerminal(DigitalSignature es,HealthNationalService s,ScheduledVisitAgenda va) {
         this.eSignature = es;
@@ -30,7 +30,7 @@ public class ConsultationTerminal {
     }
 
     public void initRevision() throws HealthCardException, NotValidePrescriptionException, ConnectException {
-
+        HealthCardID s = visitAgenda.getHealthCardID();
         if(visitAgenda.getHealthCardID()==null)throw new HealthCardException("The HealthCard id not valid");
         CIP = visitAgenda.getHealthCardID();
 
@@ -52,7 +52,7 @@ public class ConsultationTerminal {
 
     public void searchForProducts(String keyWord) throws AnyKeyWordMedicineException, ConnectException{
 
-        if(HNS.getProductsByKW(keyWord).isEmpty()) throw new AnyKeyWordMedicineException("Not valid");
+        if(HNS.getProductsByKW(keyWord).isEmpty()) throw new AnyKeyWordMedicineException("No Products with that keyword");
         productSpec_List=HNS.getProductsByKW(keyWord);
 
         // si falla la conexió ja ho fara una classe delegada
@@ -70,15 +70,15 @@ public class ConsultationTerminal {
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
 
-        if (ps.equals(null))throw new AnySelectedMedicineException("Not valid");
+        if (ps.equals(null))throw new AnySelectedMedicineException("No product, no search have been made");
 
         //cuando el formato de la pauta o la posología son incorrectos, o bien la información es incompleta
-        if(instruc.length!=7){
-            throw new IncorrectTakingGuidelinesException("Not valid");
-        }else {
-            TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]));
-            Posology p = tgl.getPosology();
-        }
+        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
+        /*
+        TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]),
+                instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]));
+        Posology p = tgl.getPosology();
+        */
         MP.addLine(ps.getUPCcode(),instruc);
 
     }
@@ -88,10 +88,10 @@ public class ConsultationTerminal {
         MP.setEndDate(date);
     }
 
-    public void sendePrescription(DigitalSignature eSign) throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
+    public void sendePrescription() throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
 
-        if(eSign.getSignatureCode().length==0)throw new eSignatureException("Not valid");
-        MP.seteSign(eSign);
+        if(this.eSignature.getSignatureCode().length==0)throw new eSignatureException("Not valid");
+        MP.seteSign(eSignature);
 
 
         if(MP.getHcID()==null)throw new NotValidePrescription("The ePrescriprion is not valid");
@@ -109,10 +109,46 @@ public class ConsultationTerminal {
     //No hace falta contemplar la parte correspondiente a los servicios de impresión, a
     //fin de imprimir la hoja de tratamiento. Es por ello que no se pide la
     //implementación del método relacionado, ni de las excepciones relacionadas.
-    //
     public void printePresc() throws printingException{
         // Not suposed to make
     }
 
  //??? // Other methods, apart from the input events
+
+    public boolean compare(MedicalPrescription mp2){
+        return this.MP.getHcID().getCIP()==mp2.getHcID().getCIP() &&
+                this.MP.geteSign()==mp2.geteSign() &&
+                this.MP.getPrescDate()==mp2.getPrescDate() &&
+                this.MP.getEndDate()==mp2.getEndDate() &&
+                this.MP.getPrescCode()==mp2.getPrescCode();
+    }
+    // need to make some tests
+
+    public HealthNationalService getHNS() {
+        return HNS;
+    }
+
+    public HealthCardID getCIP() {
+        return CIP;
+    }
+
+    public MedicalPrescription getMP() {
+        return MP;
+    }
+
+    public List<ProductSpecification> getProductSpec_List() {
+        return productSpec_List;
+    }
+
+    public ProductSpecification getPs() {
+        return ps;
+    }
+
+    public DigitalSignature geteSignature() {
+        return eSignature;
+    }
+
+    public ScheduledVisitAgenda getVisitAgenda() {
+        return visitAgenda;
+    }
 }

@@ -1,11 +1,9 @@
 package medicalconsultation;
 
 import data.ProductID;
-import medicalconsultation.MedicalPrescriptionLine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import medicalconsultation.TakingGuideline;
 import medicalconsultation.enumeration.FqUnit;
 import medicalconsultation.enumeration.dayMoment;
 import data.ProductID;
