@@ -20,25 +20,23 @@ public class ConsultationTerminal {
 
     private List<ProductSpecification> productSpec_List;
     private ProductSpecification ps;
+    private DigitalSignature eSignature;
+    ScheduledVisitAgenda visitAgenda;
 
-
-    public void setHNS(HealthNationalService s){
+    public ConsultationTerminal(DigitalSignature es,HealthNationalService s,ScheduledVisitAgenda va) {
+        this.eSignature = es;
         this.HNS=s;
+        this.visitAgenda=va;
     }
 
-    public void initRevision(ScheduledVisitAgenda visitAgenda) throws HealthCardException, NotValidePrescriptionException, ConnectException {
+    public void initRevision() throws HealthCardException, NotValidePrescriptionException, ConnectException {
 
-        if(visitAgenda.getHealthCardID()==null){
-            throw new HealthCardException("The HealthCard id not valid");
-        }else{
-            CIP = visitAgenda.getHealthCardID();
-        }
+        if(visitAgenda.getHealthCardID()==null)throw new HealthCardException("The HealthCard id not valid");
+        CIP = visitAgenda.getHealthCardID();
 
-        if(HNS.getePrescription(CIP)==null){
-            throw new NotValidePrescriptionException("The ePrescriprion is not valid");
-        }else{
-            MP= HNS.getePrescription(CIP);
-        }
+        if(HNS.getePrescription(CIP)==null)throw new NotValidePrescriptionException("The ePrescriprion is not valid");
+        MP= HNS.getePrescription(CIP);
+
         // si falla la conexió ja ho fara una classe delegada
         //throw new ConnectException("Not valid");
 
@@ -46,17 +44,10 @@ public class ConsultationTerminal {
     }
 
     public void initPrescriptionEdition() throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
-
         if(MP.equals(null))throw new AnyCurrentPrescriptionException("No prescription in running");
+        if(new Date().before(MP.getEndDate())) throw new NotFinishedTreatmentException("Current treatment not finalised yet.");
+        //System.out.println("Start of Edition");
 
-        if(new Date().before(MP.getEndDate())){
-            throw new NotFinishedTreatmentException("Current treatment not finalised yet.");
-        }else{
-            System.out.println("Start of Edition");
-        }
-
-
-        //. . .
     }
 
     public void searchForProducts(String keyWord) throws AnyKeyWordMedicineException, ConnectException{
@@ -67,17 +58,15 @@ public class ConsultationTerminal {
         // si falla la conexió ja ho fara una classe delegada
         //if(false)throw new ConnectException("Not valid");
 
-        //. . .
     }
     public void selectProduct(int option) throws AnyMedicineSearchException, ConnectException{
 
-        if(productSpec_List.isEmpty())throw new AnyMedicineSearchException("Not valid");
+        if(productSpec_List.isEmpty())throw new AnyMedicineSearchException("No medicine searched");
         ps = HNS.getProductSpecific(option);
 
         // si falla la conexió ja ho fara una classe delegada
         //if(false)throw new ConnectException("Not valid");
 
-        //. . .
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
 
@@ -87,50 +76,43 @@ public class ConsultationTerminal {
         if(instruc.length!=7){
             throw new IncorrectTakingGuidelinesException("Not valid");
         }else {
-            TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[2]), instruc[3], Float.valueOf(instruc[4]), Float.valueOf(instruc[5]), FqUnit.valueOf(instruc[6]));
+            TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]));
             Posology p = tgl.getPosology();
         }
         MP.addLine(ps.getUPCcode(),instruc);
 
-
-        //. . .
     }
     public void enterTreatmentEndingDate(Date date) throws IncorrectEndingDateException{
         if(date.before(new Date()))throw new IncorrectEndingDateException("Not valid end date");
         MP.setPrescDate(new Date());
         MP.setEndDate(date);
-        //. . .
     }
-    public void sendePrescription() throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
 
-        //if(MP.)
-        //MP.seteSign(new DigitalSignature(new Byte[] {Byte.valueOf("yokese d'on treure aixo")}));
+    public void sendePrescription(DigitalSignature eSign) throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
+
+        if(eSign.getSignatureCode().length==0)throw new eSignatureException("Not valid");
+        MP.seteSign(eSign);
+
+
+        if(MP.getHcID()==null)throw new NotValidePrescription("The ePrescriprion is not valid");
+
+        if(MP.getEndDate().equals(null) || MP.getPrescDate().equals(null) || MP.getHcID().equals(null) || MP.geteSign().equals(null))throw new NotCompletedMedicalPrescription("Not completed medical prescription failure");
         MP=HNS.sendePrescription(MP);
 
+
         //if(false)throw new ConnectException("Not valid");
-        if(false)throw new NotValidePrescription("Not valid");
-        if(false)throw new eSignatureException("Not valid");
-        if(false)throw new NotCompletedMedicalPrescription("Not valid");
-        //. . .
+
     }
 
 
-    /*
+
     //No hace falta contemplar la parte correspondiente a los servicios de impresión, a
     //fin de imprimir la hoja de tratamiento. Es por ello que no se pide la
     //implementación del método relacionado, ni de las excepciones relacionadas.
     //
     public void printePresc() throws printingException{
-        //. . .
-    }*/
+        // Not suposed to make
+    }
 
  //??? // Other methods, apart from the input events
-
-    public List<ProductSpecification> getProductSpec_List() {
-        return productSpec_List;
-    }
-
-    public void setProductSpec_List(List<ProductSpecification> productSpec_List) {
-        this.productSpec_List = productSpec_List;
-    }
 }

@@ -33,24 +33,16 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     } // Makes some inicialization
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
-        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]))));
+//        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(instruc[0],instruc[1],instruc[2],instruc[3],instruc[4],instruc[5])));
     }
     public void modifyLine(ProductID prodID, String[] instruc) throws ProductNotInPrescription, IncorrectTakingGuidelinesException {
-        if(!prescriptionLines.contains(prodID))throw new ProductNotInPrescription("Not valid");
-        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
-        for(int i =0;i<=prescriptionLines.size();i+=1){
-            if(prodID.equals(prescriptionLines.get(i))){
-                prescriptionLines.get(i).setInstructions(new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5])));
-            }
-        }
+        if(false)throw new ProductNotInPrescription("Not valid");
+        if(false)throw new IncorrectTakingGuidelinesException("Not valid");
+        //. . .
     }
     public void removeLine(ProductID prodID) throws ProductNotInPrescription {
-        if(!prescriptionLines.contains(prodID))throw new ProductNotInPrescription("Not valid");
-        for(int i = 0;i<=prescriptionLines.size();i+=1){
-            if(prodID.equals(prescriptionLines.get(i))) {
-                prescriptionLines.remove(i);
-            }
-        }
+        if(false)throw new ProductNotInPrescription("Not valid");
+        //. . .
     }
 
     public int getPrescCode() {

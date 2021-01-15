@@ -1,6 +1,8 @@
 package medicalconsultation;
 
+import data.DigitalSignature;
 import data.HealthCardID;
+import data.ProductID;
 import exceptions.*;
 import medicalconsultation.*;
 import medicalconsultation.enumeration.FqUnit;
@@ -8,8 +10,11 @@ import medicalconsultation.enumeration.dayMoment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import services.HealthNationalService;
+import services.ScheduledVisitAgenda;
 
+import java.math.BigDecimal;
 import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static medicalconsultation.enumeration.dayMoment.BEFOREBREAKFAST;
@@ -18,12 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConsultationTerminalTest {
     ConsultationTerminal CT;
+    DigitalSignature digitalSignature;
+    ScheduledVisitAgenda visitAgenda;
+    List<ProductSpecification> llistaProdSpec;
 
     @BeforeEach
-    void setUp(){
+    void setUp() throws EmptyIDException, NotValidCodeException {
 
-        CT = new ConsultationTerminal();
-        CT.setHNS(new HealthNationalService() {
+        llistaProdSpec= new ArrayList<ProductSpecification>();
+        llistaProdSpec.add(new ProductSpecification(new ProductID("000000000001"), "big chiringa", BigDecimal.valueOf(100)));
+        digitalSignature = new DigitalSignature(new byte[]{(byte) 0xe0,(byte)  0x4f});
+        CT = new ConsultationTerminal(digitalSignature, new HealthNationalService() {
             @Override
             public MedicalPrescription getePrescription(HealthCardID hcID) throws HealthCardException, NotValidePrescriptionException, ConnectException {
                 return null;
@@ -37,7 +47,7 @@ public class ConsultationTerminalTest {
 
             @Override
             public ProductSpecification getProductSpecific(int opt) throws AnyMedicineSearchException, ConnectException {
-                return CT.getProductSpec_List().get(opt);
+                return llistaProdSpec.get(opt);
             }
 
             @Override
@@ -45,7 +55,7 @@ public class ConsultationTerminalTest {
                 ePresc.setPrescCode(123456789);
                 return ePresc;
             }
-        });
+        },visitAgenda);
 
     }
 
