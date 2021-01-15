@@ -36,13 +36,16 @@ public class ConsultationTerminalTest {
         CT = new ConsultationTerminal(digitalSignature, new HealthNationalService() {
             @Override
             public MedicalPrescription getePrescription(HealthCardID hcID) throws HealthCardException, NotValidePrescriptionException, ConnectException {
-                return null;
+                return new MedicalPrescription(0,null,null , hcID,null);
             }
 
             @Override
             public List<ProductSpecification> getProductsByKW(String keyWord) throws AnyKeyWordMedicineException, ConnectException {
-
-                return null;
+                List<ProductSpecification> listTemp= new ArrayList<ProductSpecification>();
+                for (ProductSpecification p: llistaProdSpec) {
+                    if(p.getDescription().contains(keyWord)) listTemp.add(p);
+                }
+                return listTemp;
             }
 
             @Override
