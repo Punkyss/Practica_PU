@@ -119,6 +119,13 @@ public class ConsultationTerminalTest {
         CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
         CT.initRevision();
         Assertions.assertTrue(CT.compare(new MedicalPrescription(0,null,null,new HealthCardID("BBBBBBBBQR648597807024000012"),null)));
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBRRBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        Assertions.assertFalse(CT.compare(new MedicalPrescription(1,null,null,new HealthCardID("BBRRBBBBQR648597807024000012"),null)));
+
+
         // si falla la conexió ja ho fara una classe delegada
         //throw new ConnectException("Not valid");
 
