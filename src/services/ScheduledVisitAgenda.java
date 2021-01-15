@@ -14,8 +14,7 @@ public class ScheduledVisitAgenda {
 
     public HealthCardID getHealthCardID() throws HealthCardException {
         //check if the card given got no PersonalId
-        if(card.getCIP().equals(""))throw new HealthCardException("An empty string is not valid as CIP");
-        //if(card.getCIP().equals(NULL))throw new HealthCardException("Not valid NULL as CIP");
+        if(card.getCIP().equals(""))throw new HealthCardException("Empty parameter is not valid as CIP");
         return card;
     }
 }
