@@ -5,10 +5,12 @@ import data.HealthCardID;
 import data.ProductID;
 import exceptions.IncorrectTakingGuidelinesException;
 import exceptions.ProductNotInPrescription;
-
+import medicalconsultation.enumeration.FqUnit;
+import medicalconsultation.enumeration.dayMoment;
 import java.net.ConnectException;
+import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.List;
 /**
  * Package for the classes involved in the use case Suply next dispensing
  */
@@ -18,24 +20,37 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     private Date endDate;
     private HealthCardID hcID; // the healthcard ID of the patient
     private DigitalSignature eSign; // the eSignature of the doctor
-
+    private ArrayList<MedicalPrescriptionLine> prescriptionLines;
     //??? // Its components, that is, the set of medical prescription lines
 
-    public MedicalPrescription () {
-        //. . .
+    public MedicalPrescription (int prescCode, Date prescDate, Date endDate, HealthCardID hcID, DigitalSignature eSign) {
+        prescriptionLines = new ArrayList<>();
+        this.endDate=endDate;
+        this.prescCode=prescCode;
+        this.prescDate=prescDate;
+        this.eSign=eSign;
+        this.hcID=hcID;
     } // Makes some inicialization
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
-        if(this==null)throw new IncorrectTakingGuidelinesException("Not valid");
-        /*. . .*/
+        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
+        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]))));
     }
     public void modifyLine(ProductID prodID, String[] instruc) throws ProductNotInPrescription, IncorrectTakingGuidelinesException {
-        if(false)throw new ProductNotInPrescription("Not valid");
-        if(false)throw new IncorrectTakingGuidelinesException("Not valid");
-        //. . .
+        if(!prescriptionLines.contains(prodID))throw new ProductNotInPrescription("Not valid");
+        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
+        for(int i =0;i<=prescriptionLines.size();i+=1){
+            if(prodID.equals(prescriptionLines.get(i))){
+                prescriptionLines.get(i).setInstructions(new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5])));
+            }
+        }
     }
     public void removeLine(ProductID prodID) throws ProductNotInPrescription {
-        if(false)throw new ProductNotInPrescription("Not valid");
-        //. . .
+        if(!prescriptionLines.contains(prodID))throw new ProductNotInPrescription("Not valid");
+        for(int i = 0;i<=prescriptionLines.size();i+=1){
+            if(prodID.equals(prescriptionLines.get(i))) {
+                prescriptionLines.remove(i);
+            }
+        }
     }
 
     public int getPrescCode() {
