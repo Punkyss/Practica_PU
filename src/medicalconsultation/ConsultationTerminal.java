@@ -116,7 +116,7 @@ public class ConsultationTerminal {
  //??? // Other methods, apart from the input events
 
     public boolean compare(MedicalPrescription mp2){
-        return this.MP.getHcID().equals(mp2.getHcID()) &&
+        return this.MP.getHcID().getCIP()==mp2.getHcID().getCIP() &&
                 this.MP.geteSign()==mp2.geteSign() &&
                 this.MP.getPrescDate()==mp2.getPrescDate() &&
                 this.MP.getEndDate()==mp2.getEndDate() &&
