@@ -76,7 +76,7 @@ public class ConsultationTerminal {
         if(instruc.length!=7){
             throw new IncorrectTakingGuidelinesException("Not valid");
         }else {
-            TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[2]), instruc[3], Float.valueOf(instruc[4]), Float.valueOf(instruc[5]), FqUnit.valueOf(instruc[6]));
+            TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]));
             Posology p = tgl.getPosology();
         }
         MP.addLine(ps.getUPCcode(),instruc);
