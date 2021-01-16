@@ -70,7 +70,7 @@ public class ConsultationTerminal {
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
 
-        if (ps.equals(null))throw new AnySelectedMedicineException("No product, no search have been made");
+        if (ps==null)throw new AnySelectedMedicineException("No product, no search have been made");
 
         //cuando el formato de la pauta o la posología son incorrectos, o bien la información es incompleta
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");

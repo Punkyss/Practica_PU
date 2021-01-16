@@ -25,6 +25,7 @@ public class ConsultationTerminalTest {
     HealthNationalService HNSwrong;
     ScheduledVisitAgenda visitAgenda;
     List<ProductSpecification> llistaProdSpec;
+    List<ProductSpecification> llistaProdSpecBig;
 
     @BeforeEach
     void setUp() throws EmptyIDException, NotValidCodeException {
@@ -36,6 +37,10 @@ public class ConsultationTerminalTest {
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000011"), "little chiringa", BigDecimal.valueOf(100)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000012"), "little tirita", BigDecimal.valueOf(10)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000013"), "little pin", BigDecimal.valueOf(1)));
+        llistaProdSpecBig= new ArrayList<ProductSpecification>();
+        llistaProdSpecBig.add(new ProductSpecification(new ProductID("000000000001"), "big chiringa", BigDecimal.valueOf(100)));
+        llistaProdSpecBig.add(new ProductSpecification(new ProductID("000000000002"), "big tirita", BigDecimal.valueOf(10)));
+        llistaProdSpecBig.add(new ProductSpecification(new ProductID("000000000003"), "big pin", BigDecimal.valueOf(1)));
 
         // testValues
         digitalSignature = new DigitalSignature(new byte[]{(byte) 0xe0,(byte)  0x4f});
@@ -120,6 +125,7 @@ public class ConsultationTerminalTest {
         CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
         CT.initRevision();
         Assertions.assertTrue(CT.compare(new MedicalPrescription(0,null,null,new HealthCardID("BBBBBBBBQR648597807024000012"),null)));
+
         // si falla la conexió ja ho fara una classe delegada
         //throw new ConnectException("Not valid");
 
@@ -144,19 +150,42 @@ public class ConsultationTerminalTest {
         });
 
     }
-    @Test
-    void takingGuidelineSettersTest(){
-        /*
-        preTest.setdMoment(DURINGBREAKFAST);
-        preTest.setDuration(8);
-        preTest.setInstructions("Prendre una vegada al mes");
-        preTest.setPosology(new Posology(4,5,FqUnit.MONTH));
 
-        assertEquals(preTest.getdMoment(),DURINGBREAKFAST);
-        assertEquals(preTest.getDuration(), 8);
-        assertEquals(preTest.getInstructions(), "Prendre una vegada al mes");
-        assertEquals(preTest.getPosology().getDose(), 4);
-        assertEquals(preTest.getPosology().getFreq(), 5);
-        assertEquals(preTest.getPosology().getFreqUnit(), FqUnit.MONTH);*/
+    @Test
+    void searchForProductsTest() throws NotValidCodeException, EmptyIDException, AnyKeyWordMedicineException, ConnectException, HealthCardException, NotValidePrescriptionException {
+
+        Assertions.assertThrows(AnyKeyWordMedicineException.class, () -> {
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.searchForProducts("big nothing");
+        });
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        CT.searchForProducts("big");
+        for (int i=0;i<CT.getProductSpec_List().size();i++) {
+            Assertions.assertEquals(CT.getProductSpec_List().get(i).getDescription(),this.llistaProdSpecBig.get(i).getDescription());
+            Assertions.assertEquals(CT.getProductSpec_List().get(i).getPrice(),this.llistaProdSpecBig.get(i).getPrice());
+            Assertions.assertEquals(CT.getProductSpec_List().get(i).getUPCcode(),this.llistaProdSpecBig.get(i).getUPCcode());
+        }
+
+    }
+
+    @Test
+    void enterTreatmentEndingDateTest() throws IncorrectEndingDateException, NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException {
+        Assertions.assertThrows(IncorrectEndingDateException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.enterTreatmentEndingDate(new Date(18, 11, 24)); // 2018
+        });
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+
+        Assertions.assertTrue(CT.getMP().getEndDate().compareTo(new Date(2022, 3, 5, 0, 0)) == 0);
+        Assertions.assertTrue(CT.getMP().getPrescDate().compareTo(new Date())==0);
     }
 }
