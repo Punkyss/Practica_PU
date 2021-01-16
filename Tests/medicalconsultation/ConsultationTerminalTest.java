@@ -4,6 +4,8 @@ import data.DigitalSignature;
 import data.HealthCardID;
 import data.ProductID;
 import exceptions.*;
+import medicalconsultation.enumeration.FqUnit;
+import medicalconsultation.enumeration.dayMoment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +47,7 @@ public class ConsultationTerminalTest {
         // testValues
         digitalSignature = new DigitalSignature(new byte[]{(byte) 0xe0,(byte)  0x4f});
         initHNS();
+
     }
 
     private void initHNS(){
@@ -124,7 +127,8 @@ public class ConsultationTerminalTest {
         visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
         CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
         CT.initRevision();
-        Assertions.assertTrue(CT.compare(new MedicalPrescription(0,null,null,new HealthCardID("BBBBBBBBQR648597807024000012"),null)));
+        Assertions.assertTrue(CT.compare(new MedicalPrescription(0,null,null,
+                new HealthCardID("BBBBBBBBQR648597807024000012"),null)));
 
         // si falla la conexió ja ho fara una classe delegada
         //throw new ConnectException("Not valid");
@@ -152,7 +156,8 @@ public class ConsultationTerminalTest {
     }
 
     @Test
-    void searchForProductsTest() throws NotValidCodeException, EmptyIDException, AnyKeyWordMedicineException, ConnectException, HealthCardException, NotValidePrescriptionException {
+    void searchForProductsTest() throws NotValidCodeException, EmptyIDException, AnyKeyWordMedicineException, ConnectException,
+            HealthCardException, NotValidePrescriptionException {
 
         Assertions.assertThrows(AnyKeyWordMedicineException.class, () -> {
             CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
@@ -168,6 +173,62 @@ public class ConsultationTerminalTest {
             Assertions.assertEquals(CT.getProductSpec_List().get(i).getPrice(),this.llistaProdSpecBig.get(i).getPrice());
             Assertions.assertEquals(CT.getProductSpec_List().get(i).getUPCcode(),this.llistaProdSpecBig.get(i).getUPCcode());
         }
+
+    }
+
+    @Test
+    void selectProductTest() throws NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException,
+            ConnectException, AnyKeyWordMedicineException, AnyMedicineSearchException {
+        Assertions.assertThrows(AnyMedicineSearchException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.selectProduct(1); // 2018
+        });
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        CT.searchForProducts("big");
+        CT.selectProduct(1); // 2018
+        Assertions.assertTrue(CT.getPs().getUPCcode().getCode()=="000000000002");
+
+    }
+    @Test
+    void enterMedicineGuidelinesTest() throws AnySelectedMedicineException, IncorrectTakingGuidelinesException,
+            NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException,
+            AnyKeyWordMedicineException, AnyMedicineSearchException {
+
+        Assertions.assertThrows(AnySelectedMedicineException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.enterMedicineGuidelines(new String[]{String.valueOf( dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
+        });
+        Assertions.assertThrows(IncorrectTakingGuidelinesException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.searchForProducts("big");
+            CT.selectProduct(1);
+            CT.enterMedicineGuidelines(new String[]{String.valueOf( dayMoment.AFTERMEALS),"5","a","2","2"});
+        });
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        CT.searchForProducts("big");
+        CT.selectProduct(1);
+        CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
+         // si es el producte afegit anteriorment
+        Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getProduct().getCode(),"000000000002");
+        Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getInstructions(),"a");
+        Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getDuration(),5);
+
+        Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getPosology().getFreq(),2);
+        Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getPosology().getDose(),2);
+        Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getPosology().getFreqUnit(),FqUnit.DAY);
+
 
     }
 
@@ -189,22 +250,4 @@ public class ConsultationTerminalTest {
         Assertions.assertTrue(CT.getMP().getPrescDate().compareTo(new Date())==0);
     }
 
-    @Test
-    void selectProductTest() throws NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException, AnyKeyWordMedicineException, AnyMedicineSearchException {
-        Assertions.assertThrows(AnyMedicineSearchException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initRevision();
-            CT.selectProduct(1); // 2018
-        });
-
-        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-        CT.initRevision();
-        CT.searchForProducts("big");
-        CT.selectProduct(1); // 2018
-        Assertions.assertTrue(CT.getPs().getUPCcode().getCode()=="000000000002");
-
-
-    }
 }
