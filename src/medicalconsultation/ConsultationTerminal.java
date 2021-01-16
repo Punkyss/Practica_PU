@@ -70,13 +70,12 @@ public class ConsultationTerminal {
 
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
-
         if (ps==null)throw new AnySelectedMedicineException("No product selected");
         //cuando el formato de la pauta o la posología son incorrectos, o bien la información es incompleta
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid guideline values");
         MP.addLine(ps.getUPCcode(),instruc);
-
     }
+
     public void enterTreatmentEndingDate(Date date) throws IncorrectEndingDateException{
         if(date.before(new Date()))throw new IncorrectEndingDateException("Not valid end date");
         MP.setPrescDate(new Date());
@@ -85,13 +84,13 @@ public class ConsultationTerminal {
 
     public void sendePrescription() throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
 
-        if(this.eSignature.getSignatureCode().length==0)throw new eSignatureException("Not valid");
+        if(this.eSignature==null)throw new eSignatureException("Not valid");
         MP.seteSign(eSignature);
 
 
-        if(MP.getHcID()==null)throw new NotValidePrescription("The ePrescriprion is not valid");
+        if(MP.getHcID()==null)throw new NotValidePrescription("The ePrescription is not valid");
 
-        if(MP.getEndDate().equals(null) || MP.getPrescDate().equals(null) || MP.getHcID().equals(null) || MP.geteSign().equals(null))
+        if(MP.getEndDate()==(null) || MP.getPrescDate()==(null) || MP.getHcID()==(null) || MP.geteSign()==(null))
             throw new NotCompletedMedicalPrescription("Not completed medical prescription failure");
         MP=HNS.sendePrescription(MP);
 

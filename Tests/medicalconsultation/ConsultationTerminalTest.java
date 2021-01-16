@@ -250,4 +250,47 @@ public class ConsultationTerminalTest {
         Assertions.assertTrue(CT.getMP().getPrescDate().compareTo(new Date())==0);
     }
 
+    @Test
+    void sendePrescriptionTest() throws eSignatureException, NotValidePrescription, NotCompletedMedicalPrescription, ConnectException, AnyKeyWordMedicineException, HealthCardException, NotValidePrescriptionException, AnyMedicineSearchException, AnySelectedMedicineException, IncorrectTakingGuidelinesException, IncorrectEndingDateException, NotValidCodeException, EmptyIDException {
+        Assertions.assertThrows(eSignatureException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(null, HNS ,visitAgenda);
+
+            CT.initRevision();
+            CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+            CT.sendePrescription();
+        });
+
+
+        //Assertion NotValidePrescription, per completar
+        /*
+        Assertions.assertThrows(NotValidePrescription.class, () -> {
+
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS,visitAgenda);
+
+            CT.initRevision();
+            CT.searchForProducts("big chiringa");
+            CT.selectProduct(2);
+            CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
+            CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+
+            CT.sendePrescription();
+        });
+        */
+
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS,visitAgenda);
+
+        CT.initRevision();
+        CT.searchForProducts("big chiringa");
+        CT.selectProduct(2);
+        CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
+        CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+        CT.sendePrescription();
+
+        Assertions.assertEquals(CT.getMP().geteSign(), digitalSignature);
+        Assertions.assertEquals(CT.getMP().getPrescCode(), 123456789);
+    }
 }
