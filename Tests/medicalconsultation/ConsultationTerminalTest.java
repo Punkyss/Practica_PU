@@ -30,14 +30,14 @@ public class ConsultationTerminalTest {
     @BeforeEach
     void setUp() throws EmptyIDException, NotValidCodeException {
         // ProdListSpecs
-        llistaProdSpec= new ArrayList<ProductSpecification>();
+        llistaProdSpec= new ArrayList<>();
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000001"), "big chiringa", BigDecimal.valueOf(100)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000002"), "big tirita", BigDecimal.valueOf(10)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000003"), "big pin", BigDecimal.valueOf(1)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000011"), "little chiringa", BigDecimal.valueOf(100)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000012"), "little tirita", BigDecimal.valueOf(10)));
         llistaProdSpec.add(new ProductSpecification(new ProductID("000000000013"), "little pin", BigDecimal.valueOf(1)));
-        llistaProdSpecBig= new ArrayList<ProductSpecification>();
+        llistaProdSpecBig= new ArrayList<>();
         llistaProdSpecBig.add(new ProductSpecification(new ProductID("000000000001"), "big chiringa", BigDecimal.valueOf(100)));
         llistaProdSpecBig.add(new ProductSpecification(new ProductID("000000000002"), "big tirita", BigDecimal.valueOf(10)));
         llistaProdSpecBig.add(new ProductSpecification(new ProductID("000000000003"), "big pin", BigDecimal.valueOf(1)));
@@ -156,7 +156,7 @@ public class ConsultationTerminalTest {
 
         Assertions.assertThrows(AnyKeyWordMedicineException.class, () -> {
             CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.searchForProducts("big nothing");
+            CT.searchForProducts("medium");
         });
 
         visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
@@ -187,5 +187,24 @@ public class ConsultationTerminalTest {
 
         Assertions.assertTrue(CT.getMP().getEndDate().compareTo(new Date(2022, 3, 5, 0, 0)) == 0);
         Assertions.assertTrue(CT.getMP().getPrescDate().compareTo(new Date())==0);
+    }
+
+    @Test
+    void selectProductTest() throws NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException, AnyKeyWordMedicineException, AnyMedicineSearchException {
+        Assertions.assertThrows(AnyMedicineSearchException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.selectProduct(1); // 2018
+        });
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        CT.searchForProducts("big");
+        CT.selectProduct(1); // 2018
+        Assertions.assertTrue(CT.getPs().getUPCcode().getCode()=="000000000002");
+
+
     }
 }

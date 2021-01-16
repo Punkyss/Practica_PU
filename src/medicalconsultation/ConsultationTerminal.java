@@ -61,7 +61,7 @@ public class ConsultationTerminal {
     }
     public void selectProduct(int option) throws AnyMedicineSearchException, ConnectException{
 
-        if(productSpec_List.isEmpty())throw new AnyMedicineSearchException("No medicine searched");
+        if(productSpec_List==null)throw new AnyMedicineSearchException("No medicine searched");
         ps = HNS.getProductSpecific(option);
 
         // si falla la conexió ja ho fara una classe delegada
