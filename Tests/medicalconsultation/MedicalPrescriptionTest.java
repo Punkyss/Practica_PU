@@ -35,7 +35,7 @@ public class MedicalPrescriptionTest {
     private FqUnit freqUnit;
     private String[] instruc={"AFTERMEALS","5","a","2","2","DAY"};
     private String[] instrucTest={"a"};
-
+    private String[] inTest;
     @BeforeEach
     void setUp()throws NotValidCodeException,EmptyIDException{
         prescCode=8;
@@ -67,13 +67,16 @@ public class MedicalPrescriptionTest {
        dose=2;
       freq=2;
        freqUnit = FqUnit.DAY;
-       MedicalPrescriptionLine line1=new MedicalPrescriptionLine(new ProductID("123456789951"),new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5])));
-       MedicalPrescriptionLine line2= new MedicalPrescriptionLine(new ProductID("123456789951"),new TakingGuideline(dMoment, duration,instructions,dose,freq,freqUnit));
-        assertEquals(line1.getInstructions(),line2.getInstructions());
-     //   assertEquals(new MedicalPrescriptionLine(new ProductID("123456789951"),new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5])))
-      //          ,medicalPrescription.getPrescriptionLines().get(0));
-     //   assertEquals(new MedicalPrescriptionLine(new ProductID("987654321123"),new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5])))
-  //              ,medicalPrescription.getPrescriptionLines().get(1));
+       medicalPrescription.addLine(new ProductID("123456789951"),instruc);
+       medicalPrescription.addLine(new ProductID("987564321123"),instruc);
+       assertEquals(dMoment,medicalPrescription.getPrescriptionLines().get(0).getInstructions().getdMoment());
+       assertEquals(duration, medicalPrescription.getPrescriptionLines().get(0).getInstructions().getDuration());
+       assertEquals(instructions, medicalPrescription.getPrescriptionLines().get(0).getInstructions().getInstructions());
+       assertEquals(dose,medicalPrescription.getPrescriptionLines().get(0).getInstructions().getPosology().getDose());
+       assertEquals(freq,medicalPrescription.getPrescriptionLines().get(0).getInstructions().getPosology().getFreq());
+       assertEquals(freqUnit,medicalPrescription.getPrescriptionLines().get(0).getInstructions().getPosology().getFreqUnit());
+
+
 
     }
     @Test
@@ -106,7 +109,7 @@ public class MedicalPrescriptionTest {
         assertThrows(ProductNotInPrescription.class,()->medicalPrescription.removeLine(new ProductID("987654321951")));
 
     }
-//
+
 //productID 12 numeros
 // guideline string 6 =
 // /*        dMoment=dayMoment.AFTERMEALS;
