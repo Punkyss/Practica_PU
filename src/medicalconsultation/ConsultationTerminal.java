@@ -44,8 +44,8 @@ public class ConsultationTerminal {
     }
 
     public void initPrescriptionEdition() throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
-        if(MP.equals(null))throw new AnyCurrentPrescriptionException("No prescription in running");
-        if(new Date().before(MP.getEndDate())) throw new NotFinishedTreatmentException("Current treatment not finalised yet.");
+        if(MP==null)throw new AnyCurrentPrescriptionException("No prescription in running");
+        if( new Date(System.currentTimeMillis()).before(MP.getEndDate())) throw new NotFinishedTreatmentException("Current treatment not finalised yet.");
         //System.out.println("Start of Edition");
 
     }
@@ -96,7 +96,8 @@ public class ConsultationTerminal {
 
         if(MP.getHcID()==null)throw new NotValidePrescription("The ePrescriprion is not valid");
 
-        if(MP.getEndDate().equals(null) || MP.getPrescDate().equals(null) || MP.getHcID().equals(null) || MP.geteSign().equals(null))throw new NotCompletedMedicalPrescription("Not completed medical prescription failure");
+        if(MP.getEndDate().equals(null) || MP.getPrescDate().equals(null) || MP.getHcID().equals(null) || MP.geteSign().equals(null))
+            throw new NotCompletedMedicalPrescription("Not completed medical prescription failure");
         MP=HNS.sendePrescription(MP);
 
 

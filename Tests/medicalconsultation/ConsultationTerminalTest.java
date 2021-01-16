@@ -13,6 +13,7 @@ import services.ScheduledVisitAgenda;
 import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -124,6 +125,25 @@ public class ConsultationTerminalTest {
 
     }
 
+    @Test
+    void initPrescriptionEditionTest()throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
+
+        Assertions.assertThrows(AnyCurrentPrescriptionException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            //CT.initRevision();
+            CT.initPrescriptionEdition();
+        });
+
+        Assertions.assertThrows(NotFinishedTreatmentException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+            CT.initPrescriptionEdition();
+        });
+
+    }
     @Test
     void takingGuidelineSettersTest(){
         /*
