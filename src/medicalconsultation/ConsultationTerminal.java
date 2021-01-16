@@ -8,6 +8,7 @@ import medicalconsultation.enumeration.FqUnit;
 import medicalconsultation.enumeration.dayMoment;
 import services.HealthNationalService;
 import services.ScheduledVisitAgenda;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.net.ConnectException;
 import java.util.Date;
@@ -61,7 +62,7 @@ public class ConsultationTerminal {
     }
     public void selectProduct(int option) throws AnyMedicineSearchException, ConnectException{
 
-        if(productSpec_List.isEmpty())throw new AnyMedicineSearchException("No medicine searched");
+        if(productSpec_List==null)throw new AnyMedicineSearchException("No medicine searched");
         ps = HNS.getProductSpecific(option);
 
         // si falla la conexió ja ho fara una classe delegada
@@ -70,15 +71,9 @@ public class ConsultationTerminal {
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
 
-        if (ps.equals(null))throw new AnySelectedMedicineException("No product, no search have been made");
-
+        if (ps==null)throw new AnySelectedMedicineException("No product selected");
         //cuando el formato de la pauta o la posología son incorrectos, o bien la información es incompleta
-        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
-        /*
-        TakingGuideline tgl = new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]),
-                instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]));
-        Posology p = tgl.getPosology();
-        */
+        if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid guideline values");
         MP.addLine(ps.getUPCcode(),instruc);
 
     }
@@ -112,6 +107,7 @@ public class ConsultationTerminal {
     //implementación del método relacionado, ni de las excepciones relacionadas.
     public void printePresc() throws printingException{
         // Not suposed to make
+        throw new NotImplementedException();
     }
 
  //??? // Other methods, apart from the input events
