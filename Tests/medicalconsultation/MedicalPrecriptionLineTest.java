@@ -1,6 +1,9 @@
 package medicalconsultation;
 
+import Interfaces.BasicTest;
+import Interfaces.DataExceptionsTest;
 import data.ProductID;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,7 +14,7 @@ import exceptions.EmptyIDException;
 import exceptions.NotValidCodeException;
 
 
-public class MedicalPrecriptionLineTest {
+public class MedicalPrecriptionLineTest implements BasicTest, DataExceptionsTest {
     private dayMoment dMoment;
     private float duration;
     private String instructions;
@@ -20,10 +23,10 @@ public class MedicalPrecriptionLineTest {
     private FqUnit freqUnit;
     private ProductID product;
     private TakingGuideline lineTest;
-    private MedicalPrescriptionLine medicalLineTest;
+    private MedicalPrescriptionLine medicalLine;
 
     @BeforeEach
-    void setUp()throws NotValidCodeException, EmptyIDException{
+    public void setUp()throws NotValidCodeException, EmptyIDException{
         dMoment=dayMoment.AFTERMEALS;
         duration=5;
         instructions="a";
@@ -33,13 +36,22 @@ public class MedicalPrecriptionLineTest {
         product=new ProductID("897789456123");
         lineTest= new TakingGuideline(dMoment,duration,instructions,dose,freq,freqUnit);
     }
-
     @Test
-    void MedicalPrescriptionLineTest(){
-        medicalLineTest=new MedicalPrescriptionLine(product,lineTest);
-        assertEquals(lineTest,medicalLineTest.getInstructions());
-        assertEquals(product,medicalLineTest.getProduct());
+    @Override
+    public void getTest() {
+        medicalLine=new MedicalPrescriptionLine(product,lineTest);
+        assertEquals(lineTest,medicalLine.getInstructions());
+        assertEquals(product,medicalLine.getProduct());
+
     }
-
-
+    @Test
+    @Override
+    public void NotValidCodeException() {
+        Assertions.assertThrows(NotValidCodeException.class, () -> product= new ProductID("W07024000012"));
+    }
+    @Test
+    @Override
+    public void EmptyIDExceptionTest() {
+        Assertions.assertThrows(EmptyIDException.class, () -> product= new ProductID(null));
+    }
 }

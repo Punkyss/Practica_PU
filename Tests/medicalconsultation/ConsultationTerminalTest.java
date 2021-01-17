@@ -1,5 +1,6 @@
 package medicalconsultation;
 
+import Interfaces.DataExceptionsTest;
 import data.DigitalSignature;
 import data.HealthCardID;
 import data.ProductID;
@@ -14,12 +15,14 @@ import services.ScheduledVisitAgenda;
 
 import java.math.BigDecimal;
 import java.net.ConnectException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
-public class ConsultationTerminalTest {
+public class ConsultationTerminalTest implements DataExceptionsTest {
     ConsultationTerminal CT;
     ConsultationTerminal CTwrong;
     DigitalSignature digitalSignature;
@@ -28,6 +31,7 @@ public class ConsultationTerminalTest {
     ScheduledVisitAgenda visitAgenda;
     List<ProductSpecification> llistaProdSpec;
     List<ProductSpecification> llistaProdSpecBig;
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
 
     @BeforeEach
     void setUp() throws EmptyIDException, NotValidCodeException {
@@ -135,13 +139,13 @@ public class ConsultationTerminalTest {
 
     }
 
+
     @Test
-    void initPrescriptionEditionTest()throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
+    void initPrescriptionEditionTest(){
 
         Assertions.assertThrows(AnyCurrentPrescriptionException.class, () -> {
             visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
             CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            //CT.initRevision();
             CT.initPrescriptionEdition();
         });
 
@@ -149,7 +153,7 @@ public class ConsultationTerminalTest {
             visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
             CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
             CT.initRevision();
-            CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+            CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
             CT.initPrescriptionEdition();
         });
 
@@ -191,7 +195,7 @@ public class ConsultationTerminalTest {
         CT.initRevision();
         CT.searchForProducts("big");
         CT.selectProduct(1); // 2018
-        Assertions.assertTrue(CT.getPs().getUPCcode().getCode()=="000000000002");
+        Assertions.assertSame("000000000002", CT.getPs().getUPCcode().getCode());
 
     }
     @Test
@@ -220,7 +224,8 @@ public class ConsultationTerminalTest {
         CT.searchForProducts("big");
         CT.selectProduct(1);
         CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
-         // si es el producte afegit anteriorment
+
+        // si es el producte afegit anteriorment
         Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getProduct().getCode(),"000000000002");
         Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getInstructions(),"a");
         Assertions.assertEquals(CT.getMP().getPrescriptionLines().get(CT.getMP().getPrescriptionLines().size()-1).getInstructions().getDuration(),5);
@@ -233,31 +238,30 @@ public class ConsultationTerminalTest {
     }
 
     @Test
-    void enterTreatmentEndingDateTest() throws IncorrectEndingDateException, NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException {
+    void enterTreatmentEndingDateTest() throws IncorrectEndingDateException, NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException, ParseException {
         Assertions.assertThrows(IncorrectEndingDateException.class, () -> {
             visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
             CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
             CT.initRevision();
-            CT.enterTreatmentEndingDate(new Date(18, 11, 24)); // 2018
+            CT.enterTreatmentEndingDate(ft.parse("1900-05-21"));
         });
 
         visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
         CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
         CT.initRevision();
-        CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
-
-        Assertions.assertTrue(CT.getMP().getEndDate().compareTo(new Date(2022, 3, 5, 0, 0)) == 0);
-        Assertions.assertTrue(CT.getMP().getPrescDate().compareTo(new Date())==0);
+        CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
+        Assertions.assertEquals(CT.getMP().getEndDate().compareTo(ft.parse("2222-05-21")), 0);
+        Assertions.assertEquals(CT.getMP().getPrescDate().compareTo(CT.getNowDate()), 0);
     }
 
     @Test
-    void sendePrescriptionTest() throws eSignatureException, NotValidePrescription, NotCompletedMedicalPrescription, ConnectException, AnyKeyWordMedicineException, HealthCardException, NotValidePrescriptionException, AnyMedicineSearchException, AnySelectedMedicineException, IncorrectTakingGuidelinesException, IncorrectEndingDateException, NotValidCodeException, EmptyIDException {
+    void sendePrescriptionTest() throws eSignatureException, NotValidePrescription, NotCompletedMedicalPrescription, ConnectException, AnyKeyWordMedicineException, HealthCardException, NotValidePrescriptionException, AnyMedicineSearchException, AnySelectedMedicineException, IncorrectTakingGuidelinesException, IncorrectEndingDateException, NotValidCodeException, EmptyIDException, ParseException {
         Assertions.assertThrows(eSignatureException.class, () -> {
             visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
             CT = new ConsultationTerminal(null, HNS ,visitAgenda);
 
             CT.initRevision();
-            CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+            CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
             CT.sendePrescription();
         });
 
@@ -282,10 +286,25 @@ public class ConsultationTerminalTest {
         CT.searchForProducts("big chiringa");
         CT.selectProduct(2);
         CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
-        CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
+        CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
         CT.sendePrescription();
 
         Assertions.assertEquals(CT.getMP().geteSign(), digitalSignature);
         Assertions.assertEquals(CT.getMP().getPrescCode(), 123456789);
+    }
+
+    @Override
+    @Test
+    public void NotValidCodeException() {
+        Assertions.assertThrows(NotValidCodeException.class, () -> new HealthCardID("1BBBBBBBQR648597807024000012"));
+        Assertions.assertThrows(NotValidCodeException.class, () -> new ProductID("W07024000012"));
+    }
+
+    @Override
+    @Test
+    public void EmptyIDExceptionTest() {
+        Assertions.assertThrows(EmptyIDException.class, () -> digitalSignature= new DigitalSignature(new byte[]{}));
+        Assertions.assertThrows(EmptyIDException.class, () -> new HealthCardID(null));
+        Assertions.assertThrows(EmptyIDException.class, () -> new ProductID(null));
     }
 }

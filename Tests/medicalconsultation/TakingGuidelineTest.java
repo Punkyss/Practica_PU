@@ -1,5 +1,6 @@
 package medicalconsultation;
 
+import Interfaces.BasicTest;
 import medicalconsultation.enumeration.dayMoment;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import static medicalconsultation.enumeration.dayMoment.*;
 import medicalconsultation.enumeration.FqUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TakingGuidelineTest {
+class TakingGuidelineTest implements BasicTest {
     TakingGuideline preTest;
     dayMoment dM;
     FqUnit fqUnitTest;
@@ -16,7 +17,7 @@ class TakingGuidelineTest {
     Posology posologyTest;
 
     @BeforeEach
-    void setUp(){
+    public void setUp(){
         dM = BEFOREBREAKFAST;
         fqUnitTest = FqUnit.MONTH;
         instructionTest = "Prendre cada dia";
@@ -25,8 +26,9 @@ class TakingGuidelineTest {
     }
 
 
+
     @Test
-    void takingGuidelineGettersTest(){
+    public void takingGuidelineGettersTest(){
         assertEquals(preTest.getdMoment(), dM);
         assertEquals(preTest.getDuration(), 6);
         assertEquals(preTest.getInstructions(), instructionTest);
@@ -36,7 +38,8 @@ class TakingGuidelineTest {
     }
 
     @Test
-    void takingGuidelineSettersTest(){
+    @Override
+    public void getTest() {
         preTest.setdMoment(DURINGBREAKFAST);
         preTest.setDuration(8);
         preTest.setInstructions("Prendre una vegada al mes");

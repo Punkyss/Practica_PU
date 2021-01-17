@@ -12,7 +12,7 @@ public class ScheduledVisitAgenda {
 
     public HealthCardID getHealthCardID() throws HealthCardException {
         // chek if the card given got no PersonalId
-        if(card.getCIP().equals(""))throw new HealthCardException("Not valid");
+        if(card==null)throw new HealthCardException("Not valid card");
         return card;
     }
 }

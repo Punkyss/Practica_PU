@@ -1,23 +1,25 @@
 package medicalconsultation;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import Interfaces.BasicTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import medicalconsultation.enumeration.FqUnit;
 
-class PosologyTest {
+class PosologyTest implements BasicTest {
     Posology posTest;
     FqUnit fqUnitTest;
 
     @BeforeEach
-    void setUp(){
+    public void setUp(){
         fqUnitTest = FqUnit.MONTH;
         posTest = new Posology(2.0f,3.0f, fqUnitTest);
     }
 
 
     @Test
-    void takingGuidelineGettersTest(){
+    public void takingGuidelineGettersTest(){
         float z = posTest.getDose();
 
         assertEquals(2.0f , posTest.getDose());
@@ -27,7 +29,7 @@ class PosologyTest {
 
 
     @Test
-    void takingGuidelineSettersTest(){
+    public void getTest(){
         posTest.setDose(100.0f);
         posTest.setFreq(10001.0f);
         posTest.setFreqUnit(FqUnit.HOUR);

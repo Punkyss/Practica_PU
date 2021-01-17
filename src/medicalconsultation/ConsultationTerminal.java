@@ -23,6 +23,7 @@ public class ConsultationTerminal {
     private ProductSpecification ps;
     private DigitalSignature eSignature;
     private ScheduledVisitAgenda visitAgenda;
+    private Date nowDate = new Date();
 
     public ConsultationTerminal(DigitalSignature es,HealthNationalService s,ScheduledVisitAgenda va) {
         this.eSignature = es;
@@ -77,8 +78,8 @@ public class ConsultationTerminal {
     }
 
     public void enterTreatmentEndingDate(Date date) throws IncorrectEndingDateException{
-        if(date.before(new Date()))throw new IncorrectEndingDateException("Not valid end date");
-        MP.setPrescDate(new Date());
+        if(date.before(nowDate))throw new IncorrectEndingDateException("Not valid end date");
+        MP.setPrescDate(nowDate);
         MP.setEndDate(date);
     }
 
@@ -110,7 +111,7 @@ public class ConsultationTerminal {
  //??? // Other methods, apart from the input events
 
     public boolean compare(MedicalPrescription mp2){
-        return this.MP.getHcID().getCIP()==mp2.getHcID().getCIP() &&
+        return this.MP.getHcID().getCIP().equals(mp2.getHcID().getCIP()) &&
                 this.MP.geteSign()==mp2.geteSign() &&
                 this.MP.getPrescDate()==mp2.getPrescDate() &&
                 this.MP.getEndDate()==mp2.getEndDate() &&
@@ -144,5 +145,9 @@ public class ConsultationTerminal {
 
     public ScheduledVisitAgenda getVisitAgenda() {
         return visitAgenda;
+    }
+
+    public Date getNowDate() {
+        return nowDate;
     }
 }

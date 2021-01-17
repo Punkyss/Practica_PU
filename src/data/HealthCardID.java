@@ -10,7 +10,7 @@ final public class HealthCardID {
     private final String CIP;
     // 2 brand new exceptions (NotValidCodeException for empty codes) (EmptyIDException for not valid ones)
     public HealthCardID(String code) throws NotValidCodeException, EmptyIDException {
-        if(code.equals("")) throw new EmptyIDException("Code is empty");
+        if(code==null) throw new EmptyIDException("Code is empty");
         if(!code.matches("\\p{Upper}{8}\\p{Upper}{2}\\d{6}\\d{12}")) throw new NotValidCodeException("Code is not valid");
         this.CIP = code;
     }
