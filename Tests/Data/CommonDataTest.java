@@ -1,3 +1,5 @@
+package Data;
+
 import Interfaces.BasicTest;
 import Interfaces.DataExceptionsTest;
 import data.DigitalSignature;
