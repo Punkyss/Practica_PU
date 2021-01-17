@@ -1,6 +1,7 @@
 package medicalconsultation;
 
 import Interfaces.DataExceptionsTest;
+import Interfaces.MPExcetionTest;
 import data.DigitalSignature;
 import data.HealthCardID;
 import data.ProductID;
@@ -21,8 +22,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ConsultationTerminalTest implements DataExceptionsTest {
+
+public class ConsultationTerminalTest implements DataExceptionsTest, MPExcetionTest {
     ConsultationTerminal CT;
     ConsultationTerminal CTwrong;
     DigitalSignature digitalSignature;
@@ -306,5 +309,23 @@ public class ConsultationTerminalTest implements DataExceptionsTest {
         Assertions.assertThrows(EmptyIDException.class, () -> digitalSignature= new DigitalSignature(new byte[]{}));
         Assertions.assertThrows(EmptyIDException.class, () -> new HealthCardID(null));
         Assertions.assertThrows(EmptyIDException.class, () -> new ProductID(null));
+    }
+
+
+    @Test
+    public void productNotInPrescription_Test() throws NotValidePrescriptionException, HealthCardException, ConnectException, NotValidCodeException, EmptyIDException {
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+
+        Assertions.assertThrows(ProductNotInPrescription.class,()->CT.getMP().removeLine(new ProductID("987654321951")));
+
+    }
+    @Test
+    public void incorrectTakingGuidelinesException_Test() throws NotValidCodeException, EmptyIDException, IncorrectTakingGuidelinesException, NotValidePrescriptionException, HealthCardException, ConnectException {
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+        CT.initRevision();
+        Assertions.assertThrows(IncorrectTakingGuidelinesException.class,()->CT.getMP().addLine(new ProductID("123456789951"),new String[]{}));
     }
 }

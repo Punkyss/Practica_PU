@@ -39,16 +39,11 @@ public class ConsultationTerminal {
         if(HNS.getePrescription(CIP)==null)throw new NotValidePrescriptionException("The ePrescriprion is not valid");
         MP= HNS.getePrescription(CIP);
 
-        // si falla la conexió ja ho fara una classe delegada
-        //throw new ConnectException("Not valid");
-
-        //. . .
     }
 
     public void initPrescriptionEdition() throws AnyCurrentPrescriptionException, NotFinishedTreatmentException{
         if(MP==null)throw new AnyCurrentPrescriptionException("No prescription in running");
         if( new Date(System.currentTimeMillis()).before(MP.getEndDate())) throw new NotFinishedTreatmentException("Current treatment not finalised yet.");
-        //System.out.println("Start of Edition");
 
     }
 
@@ -57,22 +52,16 @@ public class ConsultationTerminal {
         if(HNS.getProductsByKW(keyWord).isEmpty()) throw new AnyKeyWordMedicineException("No Products with that keyword");
         productSpec_List=HNS.getProductsByKW(keyWord);
 
-        // si falla la conexió ja ho fara una classe delegada
-        //if(false)throw new ConnectException("Not valid");
-
     }
     public void selectProduct(int option) throws AnyMedicineSearchException, ConnectException{
 
         if(productSpec_List==null)throw new AnyMedicineSearchException("No medicine searched");
         ps = HNS.getProductSpecific(option);
 
-        // si falla la conexió ja ho fara una classe delegada
-        //if(false)throw new ConnectException("Not valid");
-
     }
     public void enterMedicineGuidelines(String[] instruc) throws AnySelectedMedicineException, IncorrectTakingGuidelinesException{
         if (ps==null)throw new AnySelectedMedicineException("No product selected");
-        //cuando el formato de la pauta o la posología son incorrectos, o bien la información es incompleta
+
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid guideline values");
         MP.addLine(ps.getUPCcode(),instruc);
     }
@@ -88,28 +77,19 @@ public class ConsultationTerminal {
         if(this.eSignature==null)throw new eSignatureException("Not valid");
         MP.seteSign(eSignature);
 
-
         if(MP.getEndDate()==null || MP.getPrescDate()==(null) || MP.getHcID()==(null) || MP.geteSign()==(null))
             throw new NotCompletedMedicalPrescription("Not completed medical prescription failure");
         MP=HNS.sendePrescription(MP);
 
-
-        //if(false)throw new ConnectException("Not valid");
-
     }
 
-
-
-    //No hace falta contemplar la parte correspondiente a los servicios de impresión, a
-    //fin de imprimir la hoja de tratamiento. Es por ello que no se pide la
-    //implementación del método relacionado, ni de las excepciones relacionadas.
     public void printePresc() throws printingException{
         // Not suposed to make
         throw new NotImplementedException();
     }
 
- //??? // Other methods, apart from the input events
-
+    // need to make some tests
+    // Compare
     public boolean compare(MedicalPrescription mp2){
         return this.MP.getHcID().getCIP().equals(mp2.getHcID().getCIP()) &&
                 this.MP.geteSign()==mp2.geteSign() &&
@@ -117,8 +97,8 @@ public class ConsultationTerminal {
                 this.MP.getEndDate()==mp2.getEndDate() &&
                 this.MP.getPrescCode()==mp2.getPrescCode();
     }
-    // need to make some tests
 
+    // Getters
     public HealthNationalService getHNS() {
         return HNS;
     }

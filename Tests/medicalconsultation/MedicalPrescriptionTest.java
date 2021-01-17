@@ -1,6 +1,7 @@
 package medicalconsultation;
 import Interfaces.BasicTest;
 import Interfaces.DataExceptionsTest;
+import Interfaces.MPExcetionTest;
 import data.DigitalSignature;
 import data.HealthCardID;
 import exceptions.IncorrectTakingGuidelinesException;
@@ -22,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MedicalPrescriptionTest implements BasicTest, DataExceptionsTest {
+public class MedicalPrescriptionTest implements BasicTest, DataExceptionsTest, MPExcetionTest {
     private int prescCode;
     private Date prescDate;
     private Date endDate;
@@ -90,13 +91,13 @@ public class MedicalPrescriptionTest implements BasicTest, DataExceptionsTest {
     }
 
     @Test
-    void productNotInPrescription_Test(){
+    public void productNotInPrescription_Test(){
         assertThrows(ProductNotInPrescription.class,()->medicalPrescription.removeLine(new ProductID("987654321951")));
         assertThrows(ProductNotInPrescription.class,()->medicalPrescription.modifyLine(new ProductID("987654321951"),instruc));
 
     }
     @Test
-    void incorrectTakingGuidelinesException_Test() throws NotValidCodeException, EmptyIDException, IncorrectTakingGuidelinesException {
+    public void incorrectTakingGuidelinesException_Test() throws NotValidCodeException, EmptyIDException, IncorrectTakingGuidelinesException {
         assertThrows(IncorrectTakingGuidelinesException.class,()->medicalPrescription.addLine(new ProductID("123456789951"),instrucTest));
         medicalPrescription.addLine(new ProductID("987654321951"),instruc);
         medicalPrescription.addLine(new ProductID("123456789951"),instruc);
