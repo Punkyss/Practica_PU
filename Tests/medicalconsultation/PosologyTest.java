@@ -11,6 +11,7 @@ class PosologyTest implements BasicTest {
     Posology posTest;
     FqUnit fqUnitTest;
 
+    @Override
     @BeforeEach
     public void setUp(){
         fqUnitTest = FqUnit.MONTH;

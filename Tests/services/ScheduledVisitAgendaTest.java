@@ -15,7 +15,7 @@ public class ScheduledVisitAgendaTest implements BasicTest {
     ScheduledVisitAgenda SV;
     ScheduledVisitAgenda SVwrong;
 
-
+    @Override
     @BeforeEach
     public void setUp() throws NotValidCodeException, EmptyIDException {
 
@@ -30,6 +30,7 @@ public class ScheduledVisitAgendaTest implements BasicTest {
         Assertions.assertThrows(HealthCardException.class, () -> SVwrong.getHealthCardID());
     }
 
+    @Override
     @Test
     public void getTest() {
         try {

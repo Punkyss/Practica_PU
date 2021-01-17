@@ -16,6 +16,7 @@ class TakingGuidelineTest implements BasicTest {
     String instructionTest;
     Posology posologyTest;
 
+    @Override
     @BeforeEach
     public void setUp(){
         dM = BEFOREBREAKFAST;
@@ -24,8 +25,6 @@ class TakingGuidelineTest implements BasicTest {
         posologyTest = new Posology(2,3, fqUnitTest);
         preTest = new TakingGuideline(dM, 6, instructionTest, 2, 3, fqUnitTest);
     }
-
-
 
     @Test
     public void takingGuidelineGettersTest(){

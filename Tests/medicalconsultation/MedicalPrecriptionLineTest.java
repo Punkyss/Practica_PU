@@ -24,6 +24,7 @@ public class MedicalPrecriptionLineTest implements BasicTest, DataExceptionsTest
     private TakingGuideline lineTest;
     private MedicalPrescriptionLine medicalLine;
 
+    @Override
     @BeforeEach
     public void setUp()throws NotValidCodeException, EmptyIDException{
         dMoment=dayMoment.AFTERMEALS;

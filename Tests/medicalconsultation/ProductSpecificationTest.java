@@ -17,6 +17,7 @@ public class ProductSpecificationTest implements BasicTest, DataExceptionsTest {
     String description;
     BigDecimal price;
 
+    @Override
     @BeforeEach
     public void setUp() throws NotValidCodeException, EmptyIDException{
         product = new ProductID("789457624568");
@@ -30,7 +31,6 @@ public class ProductSpecificationTest implements BasicTest, DataExceptionsTest {
         assertEquals(product,productEsp.getUPCcode());
         assertEquals(description,productEsp.getDescription());
         assertEquals(price,productEsp.getPrice());
-
     }
 
     @Test

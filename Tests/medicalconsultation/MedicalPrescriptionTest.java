@@ -42,6 +42,7 @@ public class MedicalPrescriptionTest implements BasicTest, DataExceptionsTest, M
     private String[] instrucTest={"a"};
     SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
 
+    @Override
     @Test
     @BeforeEach
     public void setUp()throws NotValidCodeException,EmptyIDException{
