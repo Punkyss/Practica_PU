@@ -262,9 +262,7 @@ public class ConsultationTerminalTest {
         });
 
 
-        //Assertion NotValidePrescription, per completar
-        /*
-        Assertions.assertThrows(NotValidePrescription.class, () -> {
+        Assertions.assertThrows(NotCompletedMedicalPrescription.class, () -> {
 
             visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
             CT = new ConsultationTerminal(digitalSignature, HNS,visitAgenda);
@@ -272,12 +270,9 @@ public class ConsultationTerminalTest {
             CT.initRevision();
             CT.searchForProducts("big chiringa");
             CT.selectProduct(2);
-            CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
-            CT.enterTreatmentEndingDate(new Date(2022, 3, 5, 0, 0));
-
             CT.sendePrescription();
         });
-        */
+
 
 
         visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));

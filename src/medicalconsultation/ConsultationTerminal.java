@@ -82,15 +82,13 @@ public class ConsultationTerminal {
         MP.setEndDate(date);
     }
 
-    public void sendePrescription() throws ConnectException, NotValidePrescription, eSignatureException, NotCompletedMedicalPrescription{
+    public void sendePrescription() throws ConnectException, eSignatureException, NotCompletedMedicalPrescription, NotValidePrescription {
 
         if(this.eSignature==null)throw new eSignatureException("Not valid");
         MP.seteSign(eSignature);
 
 
-        if(MP.getHcID()==null)throw new NotValidePrescription("The ePrescription is not valid");
-
-        if(MP.getEndDate()==(null) || MP.getPrescDate()==(null) || MP.getHcID()==(null) || MP.geteSign()==(null))
+        if(MP.getEndDate()==null || MP.getPrescDate()==(null) || MP.getHcID()==(null) || MP.geteSign()==(null))
             throw new NotCompletedMedicalPrescription("Not completed medical prescription failure");
         MP=HNS.sendePrescription(MP);
 
