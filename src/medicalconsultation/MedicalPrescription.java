@@ -7,10 +7,8 @@ import exceptions.IncorrectTakingGuidelinesException;
 import exceptions.ProductNotInPrescription;
 import medicalconsultation.enumeration.FqUnit;
 import medicalconsultation.enumeration.dayMoment;
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import exceptions.EmptyIDException;
 import exceptions.NotValidCodeException;
 
