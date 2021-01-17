@@ -17,7 +17,7 @@ import exceptions.NotValidCodeException;
 /**
  * Package for the classes involved in the use case Suply next dispensing
  */
-public class MedicalPrescription {// A class that represents medical prescription
+public class MedicalPrescription {
     private int prescCode;
     private Date prescDate;
     private Date endDate;
@@ -26,7 +26,6 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     private ArrayList<MedicalPrescriptionLine> prescriptionLines;
     private ArrayList<ProductID> productsPrescripted;
     private ProductID modifify;
-    //??? // Its components, that is, the set of medical prescription lines
 
     public MedicalPrescription (int prescCode, Date prescDate, Date endDate, HealthCardID hcID, DigitalSignature eSign) {
         prescriptionLines = new ArrayList<>();
@@ -40,7 +39,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
         productsPrescripted.add(prodID);
-        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5]))));
+        prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.parseFloat(instruc[1]), instruc[2], Float.parseFloat(instruc[3]), Float.parseFloat(instruc[4]), FqUnit.valueOf(instruc[5]))));
     }
     public void modifyLine(ProductID prodID, String[] instruc) throws ProductNotInPrescription, IncorrectTakingGuidelinesException,NotValidCodeException, EmptyIDException{
         if(!productsPrescripted.contains(prodID))throw new ProductNotInPrescription("Not valid");
@@ -49,7 +48,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
             modifify=new ProductID(prescriptionLines.get(i).getProduct().getCode());
 
             if(prodID.equals(modifify)){
-                prescriptionLines.get(i).setInstructions(new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.valueOf(instruc[1]), instruc[2], Float.valueOf(instruc[3]), Float.valueOf(instruc[4]), FqUnit.valueOf(instruc[5])));
+                prescriptionLines.get(i).setInstructions(new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.parseFloat(instruc[1]), instruc[2], Float.parseFloat(instruc[3]), Float.parseFloat(instruc[4]), FqUnit.valueOf(instruc[5])));
                 break;
             }
         }
@@ -65,6 +64,7 @@ public class MedicalPrescription {// A class that represents medical prescriptio
         }
     }
 
+    // Setters & gettes
     public int getPrescCode() {
         return prescCode;
     }

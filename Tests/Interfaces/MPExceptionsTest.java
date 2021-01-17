@@ -8,7 +8,7 @@ import java.net.ConnectException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public interface MPExcetionTest {
+public interface MPExceptionsTest {
 
     @Test
     void productNotInPrescription_Test() throws NotValidePrescriptionException, HealthCardException, ConnectException, NotValidCodeException, EmptyIDException;

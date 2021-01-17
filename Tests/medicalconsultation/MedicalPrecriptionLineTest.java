@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import medicalconsultation.enumeration.FqUnit;
 import medicalconsultation.enumeration.dayMoment;
-import data.ProductID;
 import exceptions.EmptyIDException;
 import exceptions.NotValidCodeException;
 

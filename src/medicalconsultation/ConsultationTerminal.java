@@ -2,10 +2,7 @@ package medicalconsultation;
 
 import data.DigitalSignature;
 import data.HealthCardID;
-import data.ProductID;
 import exceptions.*;
-import medicalconsultation.enumeration.FqUnit;
-import medicalconsultation.enumeration.dayMoment;
 import services.HealthNationalService;
 import services.ScheduledVisitAgenda;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -88,7 +85,8 @@ public class ConsultationTerminal {
         throw new NotImplementedException();
     }
 
-    // need to make some tests
+    // NEED to make some tests
+
     // Compare
     public boolean compare(MedicalPrescription mp2){
         return this.MP.getHcID().getCIP().equals(mp2.getHcID().getCIP()) &&
@@ -103,10 +101,6 @@ public class ConsultationTerminal {
         return HNS;
     }
 
-    public HealthCardID getCIP() {
-        return CIP;
-    }
-
     public MedicalPrescription getMP() {
         return MP;
     }
@@ -117,14 +111,6 @@ public class ConsultationTerminal {
 
     public ProductSpecification getPs() {
         return ps;
-    }
-
-    public DigitalSignature geteSignature() {
-        return eSignature;
-    }
-
-    public ScheduledVisitAgenda getVisitAgenda() {
-        return visitAgenda;
     }
 
     public Date getNowDate() {

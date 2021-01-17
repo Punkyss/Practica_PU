@@ -1,7 +1,7 @@
 package medicalconsultation;
 import Interfaces.BasicTest;
 import Interfaces.DataExceptionsTest;
-import Interfaces.MPExcetionTest;
+import Interfaces.MPExceptionsTest;
 import data.DigitalSignature;
 import data.HealthCardID;
 import exceptions.IncorrectTakingGuidelinesException;
@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MedicalPrescriptionTest implements BasicTest, DataExceptionsTest, MPExcetionTest {
+public class MedicalPrescriptionTest implements BasicTest, DataExceptionsTest, MPExceptionsTest {
     private int prescCode;
     private Date prescDate;
     private Date endDate;
