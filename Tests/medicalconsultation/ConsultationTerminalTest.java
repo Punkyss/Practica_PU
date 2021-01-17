@@ -113,22 +113,7 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
         };
     }
 
-    @Test
-    void HealthCardException_Test(){
-        Assertions.assertThrows(HealthCardException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(null);
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initRevision();
-        });
-    }
-    @Test
-    void NotValidePrescriptionException_Test(){
-        Assertions.assertThrows(NotValidePrescriptionException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CTwrong = new ConsultationTerminal(digitalSignature, HNSwrong ,visitAgenda);
-            CTwrong.initRevision();
-        });
-    }
+    //       Global TESTS
     @Test
     void iniRevisionTest() throws HealthCardException, NotValidePrescriptionException, ConnectException, NotValidCodeException, EmptyIDException {
 
@@ -143,24 +128,7 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
 
     }
 
-    @Test
-    void AnyCurrentPrescriptionException_Test(){
-        Assertions.assertThrows(AnyCurrentPrescriptionException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initPrescriptionEdition();
-        });
-    }
-    @Test
-    void NotFinishedTreatmentException_Test(){
-        Assertions.assertThrows(NotFinishedTreatmentException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initRevision();
-            CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
-            CT.initPrescriptionEdition();
-        });
-    }
+
     @Test
     void initPrescriptionEditionTest(){
 
@@ -169,13 +137,6 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
 
     }
 
-    @Test
-    void AnyKeyWordMedicineException_Test(){
-        Assertions.assertThrows(AnyKeyWordMedicineException.class, () -> {
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.searchForProducts("medium");
-        });
-    }
     @Test
     void searchForProductsTest() throws NotValidCodeException, EmptyIDException, AnyKeyWordMedicineException, ConnectException,
             HealthCardException, NotValidePrescriptionException {
@@ -195,15 +156,6 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
     }
 
     @Test
-    void AnyMedicineSearchException_Test(){
-        Assertions.assertThrows(AnyMedicineSearchException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initRevision();
-            CT.selectProduct(1); // 2018
-        });
-    }
-    @Test
     void selectProductTest() throws NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException,
             ConnectException, AnyKeyWordMedicineException, AnyMedicineSearchException {
 
@@ -218,15 +170,6 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
 
     }
 
-    @Test
-    void AnySelectedMedicineException_Test(){
-        Assertions.assertThrows(AnySelectedMedicineException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initRevision();
-            CT.enterMedicineGuidelines(new String[]{String.valueOf( dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
-        });
-    }
     @Test
     void enterMedicineGuidelinesTest() throws AnySelectedMedicineException, IncorrectTakingGuidelinesException,
             NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException,
@@ -255,15 +198,6 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
     }
 
     @Test
-    void IncorrectEndingDateException_Test(){
-        Assertions.assertThrows(IncorrectEndingDateException.class, () -> {
-            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
-            CT.initRevision();
-            CT.enterTreatmentEndingDate(ft.parse("1900-05-21"));
-        });
-    }
-    @Test
     void enterTreatmentEndingDateTest() throws IncorrectEndingDateException, NotValidCodeException, EmptyIDException, NotValidePrescriptionException, HealthCardException, ConnectException, ParseException {
         IncorrectEndingDateException_Test();
 
@@ -275,6 +209,96 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
         Assertions.assertEquals(CT.getMP().getPrescDate().compareTo(CT.getNowDate()), 0);
     }
 
+    @Test
+    void sendePrescriptionTest() throws eSignatureException, NotValidePrescription, NotCompletedMedicalPrescription, ConnectException, AnyKeyWordMedicineException, HealthCardException, NotValidePrescriptionException, AnyMedicineSearchException, AnySelectedMedicineException, IncorrectTakingGuidelinesException, IncorrectEndingDateException, NotValidCodeException, EmptyIDException, ParseException {
+
+        eSignatureException_Test();
+        NotCompletedMedicalPrescription_Test();
+
+        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+        CT = new ConsultationTerminal(digitalSignature, HNS,visitAgenda);
+
+        CT.initRevision();
+        CT.searchForProducts("big chiringa");
+        CT.selectProduct(2);
+        CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
+        CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
+        CT.sendePrescription();
+
+        Assertions.assertEquals(CT.getMP().geteSign(), digitalSignature);
+        Assertions.assertEquals(CT.getMP().getPrescCode(), 123456789);
+    }
+
+    //       Excetions TESTS
+
+    @Test
+    void HealthCardException_Test(){
+        Assertions.assertThrows(HealthCardException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(null);
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+        });
+    }
+    @Test
+    void NotValidePrescriptionException_Test(){
+        Assertions.assertThrows(NotValidePrescriptionException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CTwrong = new ConsultationTerminal(digitalSignature, HNSwrong ,visitAgenda);
+            CTwrong.initRevision();
+        });
+    }
+    @Test
+    void AnyCurrentPrescriptionException_Test(){
+        Assertions.assertThrows(AnyCurrentPrescriptionException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initPrescriptionEdition();
+        });
+    }
+    @Test
+    void NotFinishedTreatmentException_Test(){
+        Assertions.assertThrows(NotFinishedTreatmentException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
+            CT.initPrescriptionEdition();
+        });
+    }
+    @Test
+    void AnyKeyWordMedicineException_Test(){
+        Assertions.assertThrows(AnyKeyWordMedicineException.class, () -> {
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.searchForProducts("medium");
+        });
+    }
+    @Test
+    void AnyMedicineSearchException_Test(){
+        Assertions.assertThrows(AnyMedicineSearchException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.selectProduct(1); // 2018
+        });
+    }
+    @Test
+    void AnySelectedMedicineException_Test(){
+        Assertions.assertThrows(AnySelectedMedicineException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.enterMedicineGuidelines(new String[]{String.valueOf( dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
+        });
+    }
+    @Test
+    void IncorrectEndingDateException_Test(){
+        Assertions.assertThrows(IncorrectEndingDateException.class, () -> {
+            visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
+            CT = new ConsultationTerminal(digitalSignature, HNS ,visitAgenda);
+            CT.initRevision();
+            CT.enterTreatmentEndingDate(ft.parse("1900-05-21"));
+        });
+    }
     @Test
     void eSignatureException_Test(){
         Assertions.assertThrows(eSignatureException.class, () -> {
@@ -298,25 +322,6 @@ public class ConsultationTerminalTest implements DataExceptionsTest, MPException
             CT.selectProduct(2);
             CT.sendePrescription();
         });
-    }
-    @Test
-    void sendePrescriptionTest() throws eSignatureException, NotValidePrescription, NotCompletedMedicalPrescription, ConnectException, AnyKeyWordMedicineException, HealthCardException, NotValidePrescriptionException, AnyMedicineSearchException, AnySelectedMedicineException, IncorrectTakingGuidelinesException, IncorrectEndingDateException, NotValidCodeException, EmptyIDException, ParseException {
-
-        eSignatureException_Test();
-        NotCompletedMedicalPrescription_Test();
-
-        visitAgenda= new ScheduledVisitAgenda(new HealthCardID("BBBBBBBBQR648597807024000012"));
-        CT = new ConsultationTerminal(digitalSignature, HNS,visitAgenda);
-
-        CT.initRevision();
-        CT.searchForProducts("big chiringa");
-        CT.selectProduct(2);
-        CT.enterMedicineGuidelines(new String[]{String.valueOf(dayMoment.AFTERMEALS),"5","a","2","2",String.valueOf(FqUnit.DAY)});
-        CT.enterTreatmentEndingDate(ft.parse("2222-05-21"));
-        CT.sendePrescription();
-
-        Assertions.assertEquals(CT.getMP().geteSign(), digitalSignature);
-        Assertions.assertEquals(CT.getMP().getPrescCode(), 123456789);
     }
 
     @Override
