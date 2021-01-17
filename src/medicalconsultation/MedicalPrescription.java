@@ -23,9 +23,9 @@ public class MedicalPrescription {
     private Date endDate;
     private HealthCardID hcID; // the healthcard ID of the patient
     private DigitalSignature eSign; // the eSignature of the doctor
-    private ArrayList<MedicalPrescriptionLine> prescriptionLines;
-    private ArrayList<ProductID> productsPrescripted;
-    private ProductID modifify;
+    private ArrayList<MedicalPrescriptionLine> prescriptionLines;//Llista que conte totes les linies preescrites.
+    private ArrayList<ProductID> productsPrescripted;//Llista que conte els productes que s'han afegit al crear una linia, aquesta llista la tenim per comoditat al buscar si existeix un producte
+    private ProductID modifify;//Producte que es comprova si es el producte a modificar
 
     public MedicalPrescription (int prescCode, Date prescDate, Date endDate, HealthCardID hcID, DigitalSignature eSign) {
         prescriptionLines = new ArrayList<>();
