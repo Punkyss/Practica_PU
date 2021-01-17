@@ -25,6 +25,7 @@ public class MedicalPrescription {
     private ArrayList<ProductID> productsPrescripted;//Llista que conte els productes que s'han afegit al crear una linia, aquesta llista la tenim per comoditat al buscar si existeix un producte
     private ProductID modifify;//Producte que es comprova si es el producte a modificar
 
+    // Makes some inicialization
     public MedicalPrescription (int prescCode, Date prescDate, Date endDate, HealthCardID hcID, DigitalSignature eSign) {
         prescriptionLines = new ArrayList<>();
         productsPrescripted = new ArrayList<>();
@@ -33,12 +34,14 @@ public class MedicalPrescription {
         this.prescDate=prescDate;
         this.eSign=eSign;
         this.hcID=hcID;
-    } // Makes some inicialization
+    }
+
     public void addLine(ProductID prodID, String[] instruc) throws IncorrectTakingGuidelinesException {
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
         productsPrescripted.add(prodID);
         prescriptionLines.add(new MedicalPrescriptionLine(prodID,new TakingGuideline(dayMoment.valueOf(instruc[0]), Float.parseFloat(instruc[1]), instruc[2], Float.parseFloat(instruc[3]), Float.parseFloat(instruc[4]), FqUnit.valueOf(instruc[5]))));
     }
+
     public void modifyLine(ProductID prodID, String[] instruc) throws ProductNotInPrescription, IncorrectTakingGuidelinesException,NotValidCodeException, EmptyIDException{
         if(!productsPrescripted.contains(prodID))throw new ProductNotInPrescription("Not valid");
         if(instruc.length!=6)throw new IncorrectTakingGuidelinesException("Not valid");
@@ -51,6 +54,7 @@ public class MedicalPrescription {
             }
         }
     }
+
     public void removeLine(ProductID prodID) throws ProductNotInPrescription {
         if(!productsPrescripted.contains(prodID))throw new ProductNotInPrescription("Not valid");
         for(int i = 0;i<=prescriptionLines.size();i+=1){

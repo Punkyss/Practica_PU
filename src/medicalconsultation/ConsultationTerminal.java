@@ -85,7 +85,6 @@ public class ConsultationTerminal {
         throw new NotImplementedException();
     }
 
-    // NEED to make some tests
 
     // Compare
     public boolean compare(MedicalPrescription mp2){
